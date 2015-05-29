@@ -39,6 +39,7 @@
     - mpm_prefork
     - php5
   notify: Restart apache
+  ignore_errors: true
   tags: apache2
 
 - name: Disable Apache2 MPM event if worker requested
