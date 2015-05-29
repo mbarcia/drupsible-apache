@@ -10,8 +10,9 @@
 - name: setup logrotate.d script for the app specific log
   template:
     src: "logrotate.d/app-log.j2"
-    dest: "/etc/logrotate.d/{{ item['host'] }}-app_log"
+    dest: "/etc/logrotate.d/{{ item['app_log'] }}"
   with_items: vhost_sites
+  when: item['app_log'] is defined
   tags: apache2
 
 - name: setup logrotate.d scripts for daily backups, yeah!
