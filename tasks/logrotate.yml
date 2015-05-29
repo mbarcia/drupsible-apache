@@ -1,0 +1,13 @@
+---
+# logrotate comes pre-installed on every Linux distribution
+- name: setup logrotate.d scripts for the apache logs
+  template:
+    src: "logrotate.d/apache2.j2"
+    dest: "/etc/logrotate.d/{{ item['host'] }}-apache2"
+  with_items: vhost_sites
+
+- name: setup logrotate.d scripts for the app specific logs
+  template:
+    src: "logrotate.d/app-logs.j2"
+    dest: "/etc/logrotate.d/{{ item['host'] }}-app_logs"
+  with_items: vhost_sites

@@ -1,0 +1,89 @@
+---
+- name: Install Apache2
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items: apache2_packages
+  notify: Restart apache
+  tags: apache2
+
+- name: Install Apache2 additional pkgs
+  apt:
+    pkg: "{{ item }}"
+    state: latest
+    update_cache: yes
+  with_items: apache2_packages_ontop
+  notify: Restart apache
+  tags: apache2
+
+- name: Disable Apache2 MPM worker and event, if prefork is requested
+  apache2_module: 
+    name: "{{ item }}"
+    state: absent
+  with_items:
+    - mpm_worker
+    - mpm_event
+  when: apache2_mpm == "prefork" 
+  notify: Restart apache
+  tags: apache2
+
+- name: Enable Apache2 additional modules
+  apache2_module: 
+    name: "{{ item }}"
+    state: present
+  with_items: apache2_modules
+  notify: Restart apache
+  tags: apache2
+
+- name: Disable default apache site
+  file:
+    path: "/etc/apache2/sites-enabled/000-default"
+    state: absent
+  notify: Restart apache
+  tags: apache2
+
+- name: Disable default-ssl apache site
+  file:
+    path: "/etc/apache2/sites-enabled/000-default-ssl"
+    state: absent
+  notify: Restart apache
+  tags: apache2
+
+- name: Configure Apache ports
+  template:
+    src: apache2/ports.conf.j2
+    dest: /etc/apache2/ports.conf
+  notify: Restart apache
+  tags: apache2
+
+- name: Tighten Apache security
+  copy:
+    src: apache2/security
+    dest: /etc/apache2/conf.d/security
+  when: ansible_distribution == 'Debian' and ansible_distribution_release != 'saucy'
+  notify: Restart apache
+  tags: apache2
+
+# Ubuntu Trusty security
+- name: Tighten Apache security (Ubuntu Trusty)
+  copy:
+    src: apache2/security.conf
+    dest: /etc/apache2/conf-available/security.conf
+  notify: Restart apache
+  when: ansible_distribution == 'Ubuntu' and ansible_distribution_release == 'trusty'
+  tags: apache2
+
+# Debian Saucy security
+- name: Tighten Apache security (Debian Saucy)
+  copy:
+    src: apache2/security
+    dest: /etc/apache2/conf-available/security
+  when: ansible_distribution == 'Debian' and ansible_distribution_release == 'saucy'
+  notify: Restart apache
+  tags: apache2
+
+- name: Activate security (Debian Saucy)
+  file: src=/etc/apache2/conf-available/security dest=/etc/apache2/conf-enabled/security state=link
+  when: ansible_distribution == 'Debian' and ansible_distribution_release == 'saucy'
+  tags: apache2

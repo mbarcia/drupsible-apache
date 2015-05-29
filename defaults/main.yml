@@ -1,0 +1,114 @@
+---
+# options are prefork, worker or event
+apache2_mpm: "prefork"
+
+apache2_packages_ontop:
+# both prefork MPM only 
+  - apache2-mpm-itk
+  - libapache2-mod-php5
+
+apache2_modules:
+  - alias
+  - auth_basic
+  - authn_file
+#
+# Debian only (not for Ubuntu)
+  - authz_groupfile
+#
+  - authz_host
+  - authz_user
+  - autoindex
+#
+# prefork MPM only 
+  - cgi
+#
+  - deflate
+  - dir
+  - env
+  - expires
+  - mime
+  - negotiation
+#
+# prefork MPM only 
+  - php5
+#
+  - reqtimeout
+  - rewrite
+#
+# Debian only (not for Ubuntu)
+  - rpaf
+#
+  - setenvif
+  - status
+
+php5_packages_ontop:
+  - php-pear
+  - php-soap
+  - php5-curl
+  - php5-gd
+  - php5-gmp
+  - php5-mcrypt
+  - php5-memcache
+  - php5-mysql
+
+apache_host: "127.0.0.1"
+apache_port: "80"
+apache_ssl_port: "443"
+
+# worker or event only
+fpm_host: 127.0.0.1
+fpm_port: 9000
+
+post_max_size: "16M"
+upload_max_filesize: "16M"
+php_timezone: "Europe/Madrid"
+memory_limit: "32M"
+html_errors: "Off"
+
+# Ubuntu Trusty / Debian Wheezy
+vhost_base_path: "/var/www/html"
+
+#
+# Virtual Hosts section example
+#
+deleted_vhost_sites:
+  - {
+      host: 'del.example.com',
+      user: 'delexample',
+      group: 'delexample',
+      admin_email: 'admin@del.example.com',
+      disabled: True
+    }
+
+disabled_vhost_sites: &disabled
+  - {
+      host: 'dev.example.com',
+      user: 'devexample',
+      group: 'devexample',
+      admin_email: 'admin@dev.example.com',
+      disabled: True
+    }
+
+vhost_sites:
+  - *disabled
+  - {
+      host: 'example.com',
+      user: 'example',
+      group: 'example',
+      admin_email: 'admin@example.com',
+      aliases: [
+        www.example.com
+      ],
+      #
+      # Source settings for Drupsible initial import of website
+      #
+      # base path in the source/remote host
+      source_docroot: '/var/www/html/example.com/public_html',
+      # source/remote hostname
+      source_remote_host: 'localhost',
+      # source/remote ssh user
+      source_remote_user: 'example',
+      # ssh user and port in case of using ProxyCommand
+      source_proxy_credentials: 'example@example.com',
+      source_proxy_port: 22,
+    }

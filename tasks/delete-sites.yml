@@ -1,0 +1,23 @@
+---
+- name: Delete public_html folders
+  file:
+    path: "{{ vhost_base_path }}/{{ item['host'] }}"
+    state: absent
+  with_items: deleted_vhost_sites
+  tags: apache2
+
+- name: Disable apache2 vhosts
+  file:
+    path: /etc/apache2/sites-enabled/{{ item['host'] }}.conf
+    state: absent
+  with_items: deleted_vhost_sites
+  notify: Restart apache
+  tags: apache2
+
+- name: Delete apache2 vhosts
+  file:
+    path: /etc/apache2/sites-available/{{ item['host'] }}.conf
+    state: absent
+  with_items: deleted_vhost_sites
+  notify: Restart apache
+  tags: apache2
