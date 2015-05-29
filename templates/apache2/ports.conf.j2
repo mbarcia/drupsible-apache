@@ -2,10 +2,8 @@
 
 {% if apache_host is defined %}
 Listen {{apache_host}}:{{apache_port}}
-{% elseif apache_port is defined %}
-Listen {{apache_port}}
 {% else %}
-Listen 80
+Listen {{apache_port}}
 {% endif %}
 
 <IfModule mod_ssl.c>
