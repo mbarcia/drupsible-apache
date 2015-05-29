@@ -1,0 +1,14 @@
+{% for logfile in item.app_host %}
+{{ item.vhost_base_path }}/{{ item.host }}/logs/{{ logfile }} {
+    compress
+    dateext
+    maxage 365
+    rotate 99
+    size=+4096k
+    notifempty
+    missingok
+    create 664 {{ item.user }} {{ item.group }}
+    endscript
+}
+
+{% endfor %}
