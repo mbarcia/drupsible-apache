@@ -1,13 +1,17 @@
 ---
 galaxy_info:
-  author: "Andrew Smith"
-  license: MIT
-  min_ansible_version: 1.4
+  author: "Mariano Barcia"
+  license: 'GNU General Public License v3'
+  min_ansible_version: 1.8
   platforms:
     - name: Debian
       versions:
         - squeeze
         - wheezy
+    - name: Ubuntu
+      versions:
+        - precise
+        - trusty
   categories:
     - web
 dependencies: []
