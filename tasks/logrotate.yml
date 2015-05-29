@@ -13,3 +13,11 @@
     dest: "/etc/logrotate.d/{{ item['host'] }}-app_logs"
   with_items: vhost_sites
   tags: apache2
+
+- name: setup logrotate.d scripts for daily backups, yeah!
+  template:
+    src: "logrotate.d/backup.j2"
+    dest: "/etc/logrotate.d/{{ item['host'] }}-backup"
+  with_items: vhost_sites
+  tags: apache2
+  

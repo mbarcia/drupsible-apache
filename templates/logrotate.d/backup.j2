@@ -1,0 +1,10 @@
+/home/{{ item['user'] }}/drush-backups/archive-dump/logrotate/{{ item['host'] }}-ard.tar.gz {
+daily
+dateext
+rotate 41
+nocompress
+create 640 asm www-data
+postrotate
+  drush @{{ item['host'] }}.cur archive-dump --tar-options="--exclude=.git" --description="Respaldo de {{ item['host'] }} conteniendo codebase, ficheros y BBDD." --destination=/home/{{ item['user'] }}/drush-backups/archive-dump/logrotate/{{ item['host'] }}-ard.tar.gz --overwrite
+endscript
+}

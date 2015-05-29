@@ -1,4 +1,4 @@
-{% for logfile in item.app_logs %}
+{% for logfile in item['app_logs'] %}
 {{ item['vhost_base_path'] }}/{{ item['host'] }}/logs/{{ logfile }} {
     compress
     dateext
