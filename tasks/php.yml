@@ -19,6 +19,7 @@
   stat: 
     path: "/etc/php5/apache2/php.ini"
   register: stat_php_ini
+  tags: php5
 
 - name: Set php.ini if it doesn't exist already
   template:
@@ -28,7 +29,9 @@
   notify: Restart apache
   tags: php5
 
-- name: ensure pear is set to install stable packages
+- name: Set PEAR to install stable packages
   command: pear config-set preferred_state stable
   ignore_errors: true
-  tags: php5
+  register: pear_config
+  changed_when: pear_config.stdout.find('config-set succeeded') == -1
+  tags: pear
