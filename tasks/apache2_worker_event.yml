@@ -58,19 +58,6 @@
   notify: Restart apache
   tags: apache2
 
-- name: Check whether php5-fpm.conf already exists
-  stat: 
-    path: /etc/apache2/conf-available/php5-fpm.conf
-  register: stat_fpm_ini
-
-- name: Configure PHP5 FPM
-  template:
-    src: apache2/php5-fpm.conf.j2
-    dest: /etc/apache2/conf-available/php5-fpm.conf
-  when: not stat_fpm_ini.stat.exists
-  notify: Restart php5-fpm
-  tags: apache2
-
 - name: Enable Apache2 {{ apache2_mpm }} MPM module
   apache2_module: 
     name: mpm_{{ apache2_mpm }}

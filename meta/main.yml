@@ -14,4 +14,17 @@ galaxy_info:
         - trusty
   categories:
     - web
-dependencies: []
+dependencies: 
+  - role: debops.secret
+
+  - role: debops.ferm
+    ferm_input_list:
+      - type: 'dport_accept'
+        dport: [ 'http', 'https' ]
+        saddr: '{{ apache2_allow + apache2_group_allow + apache2_host_allow }}'
+        accept_any: True
+        filename: 'apache2_dependency_accept'
+        weight: '20'
+
+  - role: 'debops.php5'
+    when: apache_mpm != 'prefork'

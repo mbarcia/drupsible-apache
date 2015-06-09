@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 
-{% if apache_host is defined %}
+{% if apache_host|default("") != "" %}
 Listen {{apache_host}}:{{apache_port}}
 {% else %}
 Listen {{apache_port}}

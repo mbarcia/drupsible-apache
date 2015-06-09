@@ -3,7 +3,7 @@
 apache2_mpm: "prefork"
 
 apache2_packages_ontop:
-# both prefork MPM only 
+# prefork MPM only 
   - apache2-mpm-itk
   - libapache2-mod-php5
 
@@ -11,33 +11,25 @@ apache2_modules:
   - alias
   - auth_basic
   - authn_file
-#
-# Debian only (not for Ubuntu)
+# authz_groupfile Debian only (not for Ubuntu)
   - authz_groupfile
-#
   - authz_host
   - authz_user
   - autoindex
-#
-# prefork MPM only 
+# cgi prefork MPM only 
   - cgi
-#
   - deflate
   - dir
   - env
   - expires
   - mime
   - negotiation
-#
-# prefork MPM only 
+# php5 prefork MPM only 
   - php5
-#
   - reqtimeout
   - rewrite
-#
-# Debian only (not for Ubuntu)
+# rpaf Debian only (not for Ubuntu)
   - rpaf
-#
   - setenvif
   - status
 
@@ -55,9 +47,12 @@ apache_host: "127.0.0.1"
 apache_port: "80"
 apache_ssl_port: "443"
 
-# worker or event only
-fpm_host: 127.0.0.1
-fpm_port: 9000
+# List of IP addresses or CIDR networks allowed to connect to HTTP or HTTPS
+# service. It will be configured in iptables firewall via 'ferm' role. If there
+# are no entries, apache will accept connections from any IP address or network.
+apache2_allow: []
+apache2_group_allow: []
+apache2_host_allow: []
 
 post_max_size: "16M"
 upload_max_filesize: "16M"
@@ -65,11 +60,11 @@ php_timezone: "Europe/Madrid"
 memory_limit: "32M"
 html_errors: "Off"
 
-# Ubuntu Trusty / Debian Wheezy
+# Default folder in Ubuntu Trusty
 vhost_base_path: "/var/www/html"
 
 #
-# Virtual Hosts section example
+# Disabled/deleted vhosts
 #
 deleted_vhost_sites:
   - {
@@ -87,28 +82,4 @@ disabled_vhost_sites: &disabled
       group: 'devexample',
       admin_email: 'admin@dev.example.com',
       disabled: True
-    }
-
-vhost_sites:
-  - *disabled
-  - {
-      host: 'example.com',
-      user: 'example',
-      group: 'example',
-      admin_email: 'admin@example.com',
-      aliases: [
-        www.example.com
-      ],
-      #
-      # Source settings for Drupsible initial import of website
-      #
-      # base path in the source/remote host
-      source_docroot: '/var/www/html/example.com/public_html',
-      # source/remote hostname
-      source_remote_host: 'localhost',
-      # source/remote ssh user
-      source_remote_user: 'example',
-      # ssh user and port in case of using ProxyCommand
-      source_proxy_credentials: 'example@example.com',
-      source_proxy_port: 22,
     }

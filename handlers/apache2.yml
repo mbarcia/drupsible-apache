@@ -3,9 +3,3 @@
   service:
     name: apache2
     state: restarted
-
-- name: Restart php5-fpm
-  service:
-    name: php5-fpm
-    state: restarted
-    

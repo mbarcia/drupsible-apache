@@ -4,30 +4,30 @@
     pkg: "{{ item }}"
     state: latest
   with_items: php5_packages
-  notify: Restart apache
-  tags: php5
+  notify: Restart apache 
+  tags: php
 
 - name: Install PHP additional pkgs
   apt:
     pkg: "{{ item }}"
     state: latest
   with_items: php5_packages_ontop
-  notify: Restart apache
-  tags: php5
+  notify: Restart apache 
+  tags: php
 
 - name: Check whether php.ini already exists
   stat: 
     path: "/etc/php5/apache2/php.ini"
   register: stat_php_ini
-  tags: php5
+  tags: php
 
 - name: Set php.ini if it doesn't exist already
   template:
     src: "php/apache2.php.ini.j2"
     dest: "/etc/php5/apache2/php.ini"
   when: not stat_php_ini.stat.exists
-  notify: Restart apache
-  tags: php5
+  notify: Restart apache 
+  tags: php
 
 - name: Set PEAR to install stable packages
   command: pear config-set preferred_state stable

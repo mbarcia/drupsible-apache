@@ -1,21 +1,16 @@
 ---
 - include: apache2.yml
 
-- include: logrotate.yml
-
 - include: php.yml
+  when: apache2_mpm == 'prefork' 
 
 - include: apache2_worker_event.yml
   when: apache2_mpm == 'event' or apache2_mpm == 'worker' 
   
-- include: create-homes.yml
-  when: vhost_sites is defined
-
 - include: create-sites.yml
-  when: vhost_sites is defined
+  when: app is defined
 
 - include: disable-sites.yml
   when: disabled_vhost_sites is defined
 
-- include: delete-sites.yml
-  when: deleted_vhost_sites is defined
+- include: logrotate.yml

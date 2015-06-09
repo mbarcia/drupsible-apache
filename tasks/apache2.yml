@@ -1,4 +1,9 @@
 ---
+- name: Check MPM flavor
+  failed_when: apache2_mpm != "prefork" and apache2_mpm != "worker" and apache2_mpm != "event" 
+  msg: "Please specify apache2_mpm as prefork, worker, or event."
+  tags: apache2
+
 - name: Install Apache2
   apt:
     pkg: "{{ item }}"
@@ -87,3 +92,17 @@
   file: src=/etc/apache2/conf-available/security dest=/etc/apache2/conf-enabled/security state=link
   when: ansible_distribution == 'Debian' and ansible_distribution_release == 'saucy'
   tags: apache2
+
+- name: Create shared srv folder
+  file:
+    path: "{{ vhost_base_path }}/shared"
+    state: directory
+  tags: apache2
+
+- name: Create blocking robots.txt
+  copy:
+    src: robots.txt
+    dest: "{{ vhost_base_path }}/shared/robots.txt"
+  tags: apache2
+
+  
