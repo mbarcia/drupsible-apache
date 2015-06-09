@@ -1,7 +1,8 @@
 ---
 - name: Check MPM flavor
-  failed_when: apache2_mpm != "prefork" and apache2_mpm != "worker" and apache2_mpm != "event" 
-  msg: "Please specify apache2_mpm as prefork, worker, or event."
+  fail: 
+    msg: "Please specify apache2_mpm as prefork, worker, or event."
+  when: apache2_mpm != "prefork" and apache2_mpm != "worker" and apache2_mpm != "event" 
   tags: apache2
 
 - name: Install Apache2
