@@ -66,7 +66,7 @@
 
 - name: Tighten Apache security
   copy:
-    src: apache2/security
+    src: apache2/security.conf
     dest: /etc/apache2/conf.d/security
   when: ansible_distribution == 'Debian' and ansible_distribution_release != 'saucy'
   notify: Restart apache
@@ -84,14 +84,17 @@
 # Debian Saucy security
 - name: Tighten Apache security (Debian Saucy)
   copy:
-    src: apache2/security
+    src: apache2/security.conf
     dest: /etc/apache2/conf-available/security
   when: ansible_distribution == 'Debian' and ansible_distribution_release == 'saucy'
   notify: Restart apache
   tags: apache2
 
 - name: Activate security (Debian Saucy)
-  file: src=/etc/apache2/conf-available/security dest=/etc/apache2/conf-enabled/security state=link
+  file: 
+    src: /etc/apache2/conf-available/security.conf 
+    dest: /etc/apache2/conf-enabled/security 
+    state: link
   when: ansible_distribution == 'Debian' and ansible_distribution_release == 'saucy'
   tags: apache2
 
