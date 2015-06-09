@@ -31,6 +31,7 @@
     - mpm_worker
     - mpm_event
   when: apache2_mpm == "prefork" 
+  ignore_errors: true
   notify: Restart apache
   tags: apache2
 
