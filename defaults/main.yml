@@ -28,8 +28,6 @@ apache2_modules:
   - php5
   - reqtimeout
   - rewrite
-# rpaf Debian only (not for Ubuntu)
-  - rpaf
   - setenvif
   - status
 
