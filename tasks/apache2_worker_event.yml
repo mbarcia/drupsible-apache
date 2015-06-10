@@ -1,5 +1,5 @@
 ---
-- name: UnInstall packages for Apache2 MPM {{ apache2_mpm }}
+- name: UnInstall packages for Apache2 MPM worker/event
   apt:
     pkg: "{{ item }}"
     state: absent
@@ -9,17 +9,16 @@
   notify: Restart apache
   tags: apache2
 
-- name: Install packages for Apache2 MPM {{ apache2_mpm }}
+- name: Install packages for Apache2 MPM worker/event
   apt:
     pkg: "{{ item }}"
     state: latest
-  with_items: 
-    - php5-fpm 
+  with_items:
     - "apache2-mpm-{{ apache2_mpm }}"
   notify: Restart apache
   tags: apache2
 
-- name: Enable Apache2 {{ apache2_mpm }} and its dependencies
+- name: Enable Apache2 worker/event and its dependencies
   apache2_module: 
     name: "{{ item }}"
     state: present
@@ -58,7 +57,7 @@
   notify: Restart apache
   tags: apache2
 
-- name: Enable Apache2 {{ apache2_mpm }} MPM module
+- name: Enable Apache2 worker/event MPM module
   apache2_module: 
     name: mpm_{{ apache2_mpm }}
     state: present
