@@ -1,17 +1,24 @@
 # {{ ansible_managed }}
 
-{% if apache_host|default("") != "" %}
-Listen {{apache_host}}:{{apache_port}}
+{% if apache_host is defined and apache_host != '' %}
+Listen {{ apache_host }}:{{ apache_port }}
 {% else %}
-Listen {{apache_port}}
+Listen {{ apache_port }}
 {% endif %}
 
 <IfModule mod_ssl.c>
-    Listen {{apache_host}}:{{apache_ssl_port}}
-    NameVirtualHost {{apache_host}}:{{apache_port}}
+{% if apache_host is defined and apache_host != '' %}
+    Listen {{ apache_host }}:{{ apache_ssl_port }}
+{% else %}
+    Listen {{ apache_ssl_port }}
+{% endif %}
+
 </IfModule>
 
 <IfModule mod_gnutls.c>
-    Listen {{apache_host}}:{{apache_ssl_port}}
-    NameVirtualHost {{apache_host}}:{{apache_port}}
+{% if apache_host is defined and apache_host != '' %}
+    Listen {{ apache_host }}:{{ apache_ssl_port }}
+{% else %}
+    Listen {{ apache_ssl_port }}
+{% endif %}
 </IfModule>
