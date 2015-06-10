@@ -37,7 +37,6 @@ php5_packages_ontop:
   - php5-gd
   - php5-gmp
   - php5-mcrypt
-  - php5-memcache
   - php5-mysql
 
 apache_host: "127.0.0.1"
