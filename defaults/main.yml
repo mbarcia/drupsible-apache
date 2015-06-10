@@ -1,6 +1,7 @@
 ---
 # options are prefork, worker or event
 apache2_mpm: "prefork"
+php_fpm: apache2_mpm != 'prefork'
 
 apache2_packages_ontop:
 # prefork MPM only 
@@ -79,3 +80,5 @@ disabled_vhost_sites: &disabled
       admin_email: 'admin@dev.example.com',
       disabled: True
     }
+
+vhost_sites: []

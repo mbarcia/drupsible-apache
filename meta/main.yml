@@ -25,4 +25,4 @@ dependencies:
         weight: '20'
 
   - role: debops.php5
-    when: apache_mpm is defined and apache_mpm != 'prefork'
+    when: php_fpm
