@@ -4,7 +4,6 @@ apache2_mpm: "prefork"
 
 apache2_packages_ontop:
 # prefork MPM only 
-  - apache2-mpm-itk
   - libapache2-mod-php5
 
 apache2_modules:

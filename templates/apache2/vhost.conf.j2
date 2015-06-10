@@ -48,10 +48,4 @@
         ExpiresDefault "access plus 1 days"
     </IfModule>
 
-{% if apache2_mpm == 'mpm_prefork' %}
-    <IfModule mpm_itk_module>
-        AssignUserId {{ item['user'] }} {{ item['group'] }}
-    </IfModule>
-{% endif %}
-
 </VirtualHost>
