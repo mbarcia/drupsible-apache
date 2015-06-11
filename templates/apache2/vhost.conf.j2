@@ -1,6 +1,6 @@
 # {{ ansible_managed }}
 
-<VirtualHost {{apache_host}}:{{apache_port}}>
+<VirtualHost {{apache_host|default('*')}}:{{apache_port}}>
     ServerAdmin                           {{ item['admin_email'] }}
     ServerName                            {{ item['host'] }}
 {% for alias in item['aliases']|default([]) %}
@@ -10,11 +10,11 @@
     DocumentRoot                 {{ vhost_base_path }}/{{ item['host'] }}/public_html/
     ErrorLog                     {{ vhost_base_path }}/{{ item['host'] }}/logs/error.log
 
-{% if apache2_mpm == 'mpm_prefork' %}
+{% if apache2_mpm == 'prefork' %}
     php_admin_value error_log    {{ vhost_base_path }}/{{ item['host'] }}/logs/php.error.log
 {% endif %}
 
-{% if apache2_mpm != 'mpm_prefork' %}
+{% if apache2_mpm != 'prefork' %}
     # Force Apache to pass the Authorization
     # header to PHP: required for "basic_auth" under PHP-FPM and FastCGI
     SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
