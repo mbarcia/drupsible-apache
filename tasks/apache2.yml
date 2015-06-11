@@ -10,6 +10,7 @@
     pkg: "{{ item }}"
     state: latest
     update_cache: yes
+    cache_valid_time: 86400
   with_items: apache2_packages
   notify: Restart apache
   tags: apache2
@@ -19,6 +20,7 @@
     pkg: "{{ item }}"
     state: latest
     update_cache: yes
+    cache_valid_time: 86400
   with_items: apache2_packages_ontop
   notify: Restart apache
   tags: apache2
