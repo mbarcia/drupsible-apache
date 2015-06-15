@@ -26,10 +26,14 @@
     <Directory {{ vhost_base_path }}/{{ item['host'] }}/public_html/>
         Options +Indexes +FollowSymLinks
         DirectoryIndex index.html index.php
+    <IfModule mod_access_compat.c>
         Order allow,deny
         Allow from all
-        AllowOverride All
+    </IfModule>
+    <IfModule !mod_access_compat.c>
         Require all granted
+    </IfModule>
+        AllowOverride All
     </Directory>
 
     <IfModule mod_expires.c>
