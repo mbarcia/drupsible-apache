@@ -1,6 +1,6 @@
 ---
 # options are prefork, worker or event
-apache2_mpm: "prefork"
+apache2_mpm: "worker"
 php_fpm: apache2_mpm != 'prefork'
 
 apache2_packages_ontop:
@@ -56,6 +56,8 @@ upload_max_filesize: "16M"
 php_timezone: "Europe/Madrid"
 memory_limit: "32M"
 html_errors: "Off"
+
+allow_override_htaccess: All
 
 # Default folder in Ubuntu Trusty
 vhost_base_path: "/var/www/html"

@@ -15,6 +15,10 @@
   notify: Restart apache
   tags: apache2
 
+- name: Register Apache version
+  command: "apache2 -v"
+  register: apache2_version
+
 - name: Install Apache2 additional pkgs
   apt:
     pkg: "{{ item }}"
