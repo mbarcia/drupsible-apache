@@ -48,7 +48,7 @@
     Require all granted
   </IfModule>
   
-  AllowOverride {{ allow_override_htaccess }}
+  AllowOverride {{ app.allow_override_htaccess|default('All') }}
   </Directory>
 
   # Requires mod_expires to be enabled.
