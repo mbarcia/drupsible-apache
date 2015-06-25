@@ -1,4 +1,4 @@
-{{ vhost_base_path }}/{{ item['host'] }}/logs/error.log {
+{{ vhost_base_path }}/{{ webhost }}/logs/error.log {
   compress
   dateext
   maxage 365
@@ -6,13 +6,13 @@
   size=+4096k
   notifempty
   missingok
-  create 664 {{ item['user'] }} {{ item['group'] }}
+  create 664 {{ app['user'] }} {{ app['group'] }}
   postrotate
     /etc/init.d/apache2 reload
   endscript
 }
 
-{{ vhost_base_path }}/{{ item['host'] }}/logs/access.log {
+{{ vhost_base_path }}/{{ webhost }}/logs/access.log {
   compress
   dateext
   maxage 365
@@ -20,7 +20,7 @@
   size=+4096k
   notifempty
   missingok
-  create 664 {{ item['user'] }} {{ item['group'] }}
+  create 664 {{ app['user'] }} {{ app['group'] }}
   postrotate
     /etc/init.d/apache2 reload
   endscript

@@ -1,7 +1,7 @@
 ---
 - name: Assures public_html folder exists
   file:
-    path: "/home/{{ app['user'] }}/public_html"
+    path: "{{ vhost_base_path }}/{{ webhost }}/public_html"
     state: directory
     owner: "{{ app['user'] }}"
     group: "{{ app['group'] }}"
