@@ -5,14 +5,15 @@ php_fpm: apache2_mpm != 'prefork'
 
 apache2_packages_ontop:
 # prefork MPM only 
-  - libapache2-mod-php5
+#  - libapache2-mod-php5
 
 apache2_modules:
+  - actions
   - alias
   - auth_basic
   - authn_file
 # authz_groupfile Debian only (not for Ubuntu)
-  - authz_groupfile
+#  - authz_groupfile
   - authz_host
   - authz_user
   - autoindex
@@ -25,7 +26,7 @@ apache2_modules:
   - mime
   - negotiation
 # php5 prefork MPM only 
-  - php5
+#  - php5
   - reqtimeout
   - rewrite
   - setenvif
@@ -82,5 +83,3 @@ disabled_vhost_sites: &disabled
       admin_email: 'admin@dev.example.com',
       disabled: True
     }
-
-vhost_sites: []
