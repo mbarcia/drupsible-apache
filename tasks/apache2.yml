@@ -21,7 +21,7 @@
   changed_when: False
 
 - name: Apache Unix Domain Sockets (USD) are available when 2.4.10+
-  when: "apache2_version.stdout_lines | match('Server version: Apache/2\\.4\\.1?')"
+  when: 'apache2_version.stdout|match("Server version: Apache/2\\.4\\.1?")'
   set_fact: 
     uds_available: true
 
