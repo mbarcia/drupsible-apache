@@ -3,10 +3,7 @@
 - name: setup logrotate.d script for the apache log
   template:
     src: "logrotate.d/apache2.j2"
-    dest: "/etc/logrotate.d/{{ item['host'] }}-apache2"
+    dest: "/etc/logrotate.d/{{ webhost }}-apache2"
     owner: root 
     group: root
     mode: 0644
-  with_items: vhost_sites
-  when: vhost_sites is defined
-  tags: logrotate
