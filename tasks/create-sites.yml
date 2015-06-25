@@ -1,0 +1,32 @@
+---
+- name: Assures public_html folder exists
+  file:
+    path: "{{ vhost_base_path }}/{{ webhost }}/public_html"
+    state: directory
+    owner: "{{ app['user'] }}"
+    group: "{{ app['group'] }}"
+
+- name: Check whether public_html symlink already exists
+  stat: 
+    path: "/home/{{ app['user'] }}/public_html"
+  register: stat_public_symlink
+
+- name: Create public_html symlinks
+  file:
+    src: "{{ vhost_base_path }}/{{ webhost }}/public_html"
+    dest: "/home/{{ app['user'] }}/public_html"
+    state: link
+    owner: "{{ app['user'] }}"
+    group: "{{ app['group'] }}"
+
+- name: Create apache2 vhost
+  template:
+    src: apache2/vhost.conf.j2
+    dest: /etc/apache2/sites-available/{{ webhost }}.conf
+
+- name: Enable apache2 vhost
+  file:
+    src: /etc/apache2/sites-available/{{ webhost }}.conf
+    dest: /etc/apache2/sites-enabled/{{ webhost }}.conf
+    state: link
+  notify: Restart apache
