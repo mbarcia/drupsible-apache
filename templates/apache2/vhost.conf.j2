@@ -17,7 +17,7 @@
   # Force Apache to pass the Authorization
   # header to PHP: required for "basic_auth" under PHP-FPM and FastCGI
   SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
-    
+
   {% if uds_available|default(false) %}
   <FilesMatch \.php$>
     SetHandler "proxy:unix:{{ app.fpm_listen|default('/var/run/php5-fpm-' + webhost + '.sock') }}|fcgi://localhost"
