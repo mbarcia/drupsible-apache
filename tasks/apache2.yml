@@ -25,6 +25,7 @@
   when: 'apache2_version.stdout|match("Server version: Apache/2\\.4\\.1?")'
   set_fact: 
     uds_available: true
+  when: "apache2_version is defined and apache2_version.stdout != ''"
 
 - name: Install Apache2 additional pkgs
   apt:
