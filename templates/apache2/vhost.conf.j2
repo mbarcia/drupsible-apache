@@ -6,11 +6,11 @@
   ServerAlias                           {{ alias }}
 {% endfor %}
 
-  DocumentRoot                 {{ vhost_base_path }}/{{ webhost }}/public_html/
-  ErrorLog                     {{ vhost_base_path }}/{{ webhost }}/logs/error.log
-  CustomLog                    {{ vhost_base_path }}/{{ webhost }}/logs/access.log common
+  DocumentRoot                 {{ vhost_base_path }}/{{ app_name }}/public_html/
+  ErrorLog                     {{ vhost_base_path }}/{{ app_name }}/logs/error.log
+  CustomLog                    {{ vhost_base_path }}/{{ app_name }}/logs/access.log common
 {% if apache2_mpm == 'prefork' %}
-  php_admin_value error_log    {{ vhost_base_path }}/{{ webhost }}/logs/php.error.log
+  php_admin_value error_log    {{ vhost_base_path }}/{{ app_name }}/logs/php.error.log
 {% endif %}
 
 {% if apache2_mpm != 'prefork' %}
@@ -20,14 +20,14 @@
 
   {% if uds_available|default(false) %}
   <FilesMatch \.php$>
-    SetHandler "proxy:unix:{{ app.fpm_listen|default('/var/run/php5-fpm-' + webhost + '.sock') }}|fcgi://localhost"
+    SetHandler "proxy:unix:{{ php5_pool_default.listen }}|fcgi://localhost"
   </FilesMatch>
   {% else %}
-  ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ app.fpm_listen|default('127.0.0.1:9000') }}{{ vhost_base_path }}/{{ webhost }}/public_html/$1
+  ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ php5_pool_default.listen }}{{ vhost_base_path }}/{{ app_name }}/public_html/$1
   {% endif %}
 {% endif %}
 
-  <Directory {{ vhost_base_path }}/{{ webhost }}/public_html/>
+  <Directory {{ vhost_base_path }}/{{ app_name }}/public_html/>
   # Don't show directory listings for URLs which map to a directory.
   Options -Indexes
   
