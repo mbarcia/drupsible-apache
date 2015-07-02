@@ -26,5 +26,5 @@ dependencies:
         filename: 'apache2_dependency_accept'
         weight: '20'
 
-  - role: debops.php5
-    when: php_fpm
+  - role: drupsible.newrelic
+    when: "'newrelic-php5' in php5_packages_ontop and apache2_mpm == 'prefork'"
