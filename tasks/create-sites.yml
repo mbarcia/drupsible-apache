@@ -3,21 +3,21 @@
   file:
     path: "{{ vhost_base_path }}/{{ app_name }}/public_html"
     state: directory
-    owner: "{{ app['user'] }}"
-    group: "{{ app['group'] }}"
+    owner: "{{ app_env['user'] }}"
+    group: "{{ app_env['group'] }}"
 
 - name: Check whether public_html symlink already exists
   stat: 
-    path: "/home/{{ app['user'] }}/public_html"
+    path: "/home/{{ app_env['user'] }}/public_html"
   register: stat_public_symlink
 
 - name: Create public_html symlinks
   file:
     src: "{{ vhost_base_path }}/{{ app_name }}/public_html"
-    dest: "/home/{{ app['user'] }}/public_html"
+    dest: "/home/{{ app_env['user'] }}/public_html"
     state: link
-    owner: "{{ app['user'] }}"
-    group: "{{ app['group'] }}"
+    owner: "{{ app_env['user'] }}"
+    group: "{{ app_env['group'] }}"
 
 - name: Create apache2 vhost
   template:

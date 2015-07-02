@@ -2,7 +2,7 @@
 
 <VirtualHost {{ apache_host|default('*') }}:{{ apache_port|default('*') }}>
   ServerName                            {{ webhost }}
-{% for alias in app.aliases|default([]) %}
+{% for alias in app_env.aliases|default([]) %}
   ServerAlias                           {{ alias }}
 {% endfor %}
 
@@ -48,7 +48,7 @@
     Require all granted
   </IfModule>
   
-  AllowOverride {{ app.allow_override_htaccess|default('All') }}
+  AllowOverride {{ app_env.allow_override_htaccess|default('All') }}
   </Directory>
 
   # Requires mod_expires to be enabled.
@@ -159,5 +159,5 @@
     </IfModule>
   </IfModule>
 
-  ServerAdmin                           {{ app.admin_email|default('admin@' + webhost) }}
+  ServerAdmin                           {{ app_env.admin_email|default('admin@' + webhost) }}
 </VirtualHost>
