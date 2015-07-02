@@ -1,7 +1,6 @@
 ---
 # options are prefork, worker or event
 apache2_mpm: "worker"
-php_fpm: apache2_mpm != 'prefork'
 
 apache2_packages_ontop:
 # prefork MPM only 
