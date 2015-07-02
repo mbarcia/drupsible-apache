@@ -1,27 +1,16 @@
-{{ vhost_base_path }}/{{ webhost }}/logs/error.log {
-  compress
-  dateext
-  maxage 365
-  rotate 99
-  size=+4096k
-  notifempty
+{{ vhost_base_path }}/{{ app_name }}/logs/*.log {
+  daily
   missingok
-  create 664 {{ app['user'] }} {{ app['group'] }}
-  postrotate
-    /etc/init.d/apache2 reload
-  endscript
-}
-
-{{ vhost_base_path }}/{{ webhost }}/logs/access.log {
   compress
+  delaycompress
+  sharedscripts
   dateext
+  rotate 60
+  create
   maxage 365
-  rotate 99
-  size=+4096k
-  notifempty
-  missingok
-  create 664 {{ app['user'] }} {{ app['group'] }}
   postrotate
-    /etc/init.d/apache2 reload
+    if [ -f "$(. /etc/apache2/envvars ; echo ${APACHE_PID_FILE:-/var/run/apache2.pid})" ]; then
+      service apache2 reload > /dev/null
+    fi
   endscript
 }
