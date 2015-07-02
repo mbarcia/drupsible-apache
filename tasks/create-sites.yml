@@ -1,7 +1,7 @@
 ---
 - name: Assures public_html folder exists
   file:
-    path: "{{ vhost_base_path }}/{{ webhost }}/public_html"
+    path: "{{ vhost_base_path }}/{{ app_name }}/public_html"
     state: directory
     owner: "{{ app['user'] }}"
     group: "{{ app['group'] }}"
@@ -13,7 +13,7 @@
 
 - name: Create public_html symlinks
   file:
-    src: "{{ vhost_base_path }}/{{ webhost }}/public_html"
+    src: "{{ vhost_base_path }}/{{ app_name }}/public_html"
     dest: "/home/{{ app['user'] }}/public_html"
     state: link
     owner: "{{ app['user'] }}"
@@ -22,11 +22,11 @@
 - name: Create apache2 vhost
   template:
     src: apache2/vhost.conf.j2
-    dest: /etc/apache2/sites-available/{{ webhost }}.conf
+    dest: /etc/apache2/sites-available/{{ app_name }}.conf
 
 - name: Enable apache2 vhost
   file:
-    src: /etc/apache2/sites-available/{{ webhost }}.conf
-    dest: /etc/apache2/sites-enabled/{{ webhost }}.conf
+    src: /etc/apache2/sites-available/{{ app_name }}.conf
+    dest: /etc/apache2/sites-enabled/{{ app_name }}.conf
     state: link
   notify: Restart apache
