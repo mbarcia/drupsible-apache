@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 
 <VirtualHost {{ apache_host|default('*') }}:{{ apache_port|default('*') }}>
-  ServerName                            {{ webhost }}
+  ServerName                            {{ ansible_host }}{{ item }}.{{ ansible_fqdn }}
 {% for alias in app_env.aliases|default([]) %}
   ServerAlias                           {{ alias }}
 {% endfor %}
