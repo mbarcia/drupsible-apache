@@ -7,7 +7,7 @@
 - include: apache2_worker_event.yml
   when: apache2_mpm == 'event' or apache2_mpm == 'worker' 
   
-- include: create-sites.yml
+- include: create-site.yml
   when: app_env is defined
 
 - include: disable-sites.yml

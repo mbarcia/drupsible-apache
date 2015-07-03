@@ -6,7 +6,7 @@
   ServerAlias                           {{ alias }}
 {% endfor %}
 
-  DocumentRoot                 {{ vhost_base_path }}/{{ app_name }}/public_html/
+  DocumentRoot                 {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}
   ErrorLog                     {{ vhost_base_path }}/{{ app_name }}/logs/error.log
   CustomLog                    {{ vhost_base_path }}/{{ app_name }}/logs/access.log common
 {% if apache2_mpm == 'prefork' %}
@@ -27,7 +27,7 @@
   {% endif %}
 {% endif %}
 
-  <Directory {{ vhost_base_path }}/{{ app_name }}/public_html/>
+  <Directory {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}>
   # Don't show directory listings for URLs which map to a directory.
   Options -Indexes
   
