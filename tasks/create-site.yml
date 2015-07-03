@@ -6,42 +6,6 @@
     owner: "{{ app_env['user'] }}"
     group: "{{ app_env['group'] }}"
 
-- name: Stat public_html for cur vhost
-  stat:
-    path: "{{ webroot }}/{{ app_name }}/public_html"
-  register: public_html_symlink
-
-- name: Create temp public_html symlink for cur vhost if missing
-  file:
-    dest: "{{ webroot }}/{{ app_name }}/public_html"
-    src: "/tmp"
-    state: link
-  when: not public_html_symlink.exists
-
-- name: Stat public_html for build vhost
-  stat:
-    path: "{{ webroot }}/{{ app_name }}/public_html.build"
-  register: public_html_symlink_build
-
-- name: Create temp public_html symlink for build vhost if missing
-  file:
-    dest: "{{ webroot }}/{{ app_name }}/public_html.build"
-    src: "/tmp"
-    state: link
-  when: not public_html_symlink_build.exists
-
-- name: Stat public_html for bak vhost
-  stat:
-    path: "{{ webroot }}/{{ app_name }}/public_html.bak"
-  register: public_html_symlink_bak
-
-- name: Create temp public_html symlink for bak vhost if missing
-  file:
-    dest: "{{ webroot }}/{{ app_name }}/public_html.bak"
-    src: "/tmp"
-    state: link
-  when: not public_html_symlink_bak.exists
-
 - name: Create apache2 vhost
   template:
     src: apache2/vhost.conf.j2
