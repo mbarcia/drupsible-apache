@@ -1,7 +1,7 @@
 # {{ ansible_managed }}
 
 <VirtualHost {{ apache_host|default('*') }}:{{ apache_port|default('*') }}>
-  ServerName                            {{ ansible_host }}{{ item }}.{{ ansible_fqdn }}
+  ServerName                            {{ webhost }}{{ item }}.{{ ansible_fqdn }}
 {% for alias in app_env.aliases|default([]) %}
   ServerAlias                           {{ alias }}
 {% endfor %}
@@ -159,5 +159,5 @@
     </IfModule>
   </IfModule>
 
-  ServerAdmin                           {{ app_env.admin_email|default('admin@' + webhost) }}
+  ServerAdmin                           {{ app_env.admin_email|default('admin@' + webhost + '.' + ansible_fqdn) }}
 </VirtualHost>
