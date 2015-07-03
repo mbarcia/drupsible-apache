@@ -8,7 +8,7 @@
   when: apache2_mpm == 'event' or apache2_mpm == 'worker' 
   
 - include: create-sites.yml
-  when: app is defined
+  when: app_env is defined
 
 - include: disable-sites.yml
   when: disabled_vhost_sites is defined
