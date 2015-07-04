@@ -1,7 +1,7 @@
 ---
 - name: Make sure logs dir exists
   file:
-    path: "{{ webroot }}/{{ app_name }}/logs"
+    path: "{{ vhost_base_path }}/{{ app_name }}/logs"
     state: directory
     owner: "{{ app_env['user'] }}"
     group: "{{ app_env['group'] }}"
