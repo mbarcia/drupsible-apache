@@ -50,7 +50,7 @@
     
     AllowOverride {{ allow_override_htaccess|default('All') }}
   
-{% if not allow_override_htaccess %}
+{% if allow_override_htaccess == 'None' %}
     # Requires mod_expires to be enabled.
     <IfModule mod_expires.c>
       # Enable expirations.
