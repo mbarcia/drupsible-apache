@@ -12,7 +12,6 @@
     dest: /etc/apache2/sites-available/{{ app_name }}{{ item }}.conf
   with_items:
     - ""
-    - ".build"
     - ".bak"
 
 - name: Enable apache2 cur, build and bak vhosts
@@ -22,6 +21,5 @@
     state: link
   with_items:
     - ""
-    - ".build"
     - ".bak"
   notify: Restart apache
