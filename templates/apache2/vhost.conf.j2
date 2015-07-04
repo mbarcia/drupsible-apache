@@ -27,6 +27,7 @@
   {% endif %}
 {% endif %}
 
+{% if not allow_override_htaccess %}
   <Directory {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}>
   # Don't show directory listings for URLs which map to a directory.
   Options -Indexes
@@ -158,6 +159,7 @@
       </FilesMatch>
     </IfModule>
   </IfModule>
+{% endif %}
 
   ServerAdmin                           {{ app_env.admin_email|default('admin@' + webhost + '.' + ansible_fqdn) }}
 </VirtualHost>
