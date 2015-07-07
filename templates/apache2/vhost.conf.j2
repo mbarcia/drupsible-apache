@@ -171,5 +171,37 @@
 {% endif %}
   </Directory>
 
-  ServerAdmin                           {{ app_env.admin_email|default('admin@' + webhost + '.' + ansible_fqdn) }}
+{% if allow_override_htaccess == 'None' %}
+  <Directory {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}/sites/default/files>
+    # Turn off all options we don't need.
+    Options None
+    Options +FollowSymLinks
+
+    # Set the catch-all handler to prevent scripts from being executed.
+    SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
+    <Files *>
+      # Override the handler again if we're run later in the evaluation list.
+      SetHandler Drupal_Security_Do_Not_Remove_See_SA_2013_003
+    </Files>
+
+    # If we know how to do it safely, disable the PHP engine entirely.
+    <IfModule mod_php5.c>
+      php_flag engine off
+    </IfModule>
+  </Directory>
+{% endif %}
+
+{% if allow_override_htaccess == 'None' %}
+  <Directory {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}/sites/default/files/private>
+    <IfModule mod_access_compat.c>
+      Order deny,allow
+      Deny from all
+    </IfModule>
+    <IfModule !mod_access_compat.c>
+      Require all denied
+    </IfModule>
+  </Directory>
+{% endif %}
+
+  ServerAdmin {{ app_env.admin_email|default('admin@' + webhost + '.' + ansible_fqdn) }}
 </VirtualHost>
