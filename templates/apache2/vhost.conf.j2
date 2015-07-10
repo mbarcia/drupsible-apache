@@ -20,7 +20,7 @@
 
 {% if uds_available|default(false) %}
   <FilesMatch \.php$>
-    SetHandler "proxy:unix:{{ app_env.fpm_listen }}|fcgi://localhost"
+    SetHandler "proxy:unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}"
   </FilesMatch>
 {% else %}
   ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ app_env.fpm_listen }}{{ vhost_base_path }}/{{ app_name }}/public_html/$1
