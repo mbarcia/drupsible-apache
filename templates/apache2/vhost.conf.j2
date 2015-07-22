@@ -18,7 +18,7 @@
   # header to PHP: required for "basic_auth" under PHP-FPM and FastCGI
   SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
 
-{% if uds_available|default(false) %}
+{% if uds_available %}
   <FilesMatch \.php$>
     SetHandler "proxy:unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}"
   </FilesMatch>
