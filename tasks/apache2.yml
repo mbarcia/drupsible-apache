@@ -21,10 +21,14 @@
   changed_when: False
   sudo: yes
 
-- name: Apache Unix Domain Sockets (USD) are available when 2.4.10+
-  when: 'apache2_version is defined and apache2_version.stdout|match("Server version: Apache/2\\.4\\.1?")'
+- name: Init UDS flag
   set_fact: 
-    uds_available: true
+    uds_available: no
+
+- name: Apache Unix Domain Sockets (USD) are available when 2.4.10+
+  when: 'apache2_version is defined and apache2_version.stdout|match("Server version: Apache/2\\.4\\.1.")'
+  set_fact: 
+    uds_available: yes
 
 - name: Install Apache2 additional pkgs
   apt:
