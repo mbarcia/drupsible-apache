@@ -52,6 +52,14 @@
   notify: Restart apache
   tags: apache2
 
+- name: Configure Apache prefork MPM
+  template:
+    src: apache2/mods/mpm_prefork.conf.j2
+    dest: /etc/apache2/mods-available/mpm_prefork.conf
+  when: apache2_mpm == "prefork" 
+  notify: Restart apache
+  tags: apache2
+
 - name: Enable Apache2 additional modules
   apache2_module: 
     name: "{{ item }}"

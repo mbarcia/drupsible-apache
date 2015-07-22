@@ -30,6 +30,14 @@
   notify: Restart apache
   tags: apache2
 
+- name: Configure Apache event/worker MPM
+  template:
+    src: apache2/mods/mpm_{{ apache2_mpm }}.conf.j2
+    dest: /etc/apache2/mods-available/mpm_{{ apache2_mpm }}.conf
+  when: apache2_mpm == "worker" or apache2_mpm == "event" 
+  notify: Restart apache
+  tags: apache2
+
 - name: Disable Apache2 MPM prefork modules
   apache2_module: 
     name: "{{ item }}"
