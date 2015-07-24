@@ -10,7 +10,8 @@
   ErrorLog                     {{ vhost_base_path }}/{{ app_name }}/logs/error.log
   CustomLog                    {{ vhost_base_path }}/{{ app_name }}/logs/access.log common
 {% if apache2_mpm == 'prefork' %}
-  php_admin_value error_log    {{ vhost_base_path }}/{{ app_name }}/logs/php.error.log
+  php_value error_log    {{ vhost_base_path }}/{{ app_name }}/logs/php.error.log
+  php_value newrelic.appname    {{ app_name }}
 {% endif %}
 
 {% if apache2_mpm != 'prefork' %}
@@ -99,33 +100,8 @@
       # downloaded.
       RewriteRule "(^|/)\." - [F]
     
-      # If your site can be accessed both with and without the 'www.' prefix, you
-      # can use one of the following settings to redirect users to your preferred
-      # URL, either WITH or WITHOUT the 'www.' prefix. Choose ONLY one option:
-      #
-      # To redirect all users to access the site WITH the 'www.' prefix,
-      # (http://example.com/... will be redirected to http://www.example.com/...)
-      # uncomment the following:
-      # RewriteCond %{HTTP_HOST} .
-      # RewriteCond %{HTTP_HOST} !^www\. [NC]
-      # RewriteRule ^ http%{ENV:protossl}://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
-      #
-      # To redirect all users to access the site WITHOUT the 'www.' prefix,
-      # (http://www.example.com/... will be redirected to http://example.com/...)
-      # uncomment the following:
-      # RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
-      # RewriteRule ^ http%{ENV:protossl}://%1%{REQUEST_URI} [L,R=301]
-    
-      # Modify the RewriteBase if you are using Drupal in a subdirectory or in a
-      # VirtualDocumentRoot and the rewrite rules are not working properly.
-      # For example if your site is at http://example.com/drupal uncomment and
-      # modify the following line:
-      # RewriteBase /drupal
-      #
-      # If your site is running in a VirtualDocumentRoot at http://example.com/,
-      # uncomment the following line:
-      # RewriteBase /
-    
+      Include sites-available/{{ app_name }}-rewrite-rules.conf
+      
       # Pass all requests not referring directly to files in the filesystem to
       # index.php. Clean URLs are handled in drupal_environment_initialize().
       RewriteCond %{REQUEST_FILENAME} !-f
@@ -178,6 +154,12 @@
     <IfModule mod_php5.c>
       php_flag engine off
     </IfModule>
+
+    <IfModule mod_expires.c>
+        ExpiresActive On
+        ExpiresDefault "access plus 1 hour"
+    </IfModule>
+
   </Directory>
 {% endif %}
 
@@ -190,6 +172,12 @@
     <IfModule !mod_access_compat.c>
       Require all denied
     </IfModule>
+
+    <IfModule mod_expires.c>
+        ExpiresActive On
+        ExpiresDefault "access plus 1 hour"
+    </IfModule>
+
   </Directory>
 {% endif %}
 
