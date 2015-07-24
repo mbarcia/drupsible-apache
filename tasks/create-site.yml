@@ -4,6 +4,22 @@
     path: "{{ vhost_base_path }}/{{ app_name }}/logs"
     state: directory
 
+- name: Copy optional rewrite rules file
+  template: 
+    src: "apache2/rewrite-rules.conf"
+    dest: sites-available/{{ app_name }}-rewrite-rules.conf.j2
+  notify: Restart apache
+  when: custom_rewrite_rules_path is not defined
+  tags: apache2
+
+- name: Copy custom optional rewrite rules file
+  template: 
+    src: "{{ custom_rewrite_rules_path }}"
+    dest: sites-available/{{ app_name }}-rewrite-rules.conf
+  notify: Restart apache
+  when: custom_rewrite_rules_path is defined
+  tags: apache2
+
 - name: Create apache2 vhost
   template:
     src: apache2/vhost.conf.j2
