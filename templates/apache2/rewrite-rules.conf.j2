@@ -28,7 +28,7 @@
 {% if app_i18n and app_languages is defined %}
   {% for language in app_languages %}
       ## On frontpage redirect to /{{ language }} if the browser language starts with {{ language }}
-      RewriteCond %{HTTP:Accept-Language} ^{{ item }}.*$ [NC]
+      RewriteCond %{HTTP:Accept-Language} ^{{ language }}.*$ [NC]
       RewriteCond %{REQUEST_URI} ^/$ [NC]
       RewriteCond %{QUERY_STRING} !(^q\=) [NC]
       RewriteRule ^(.*)$ /{{ language }} [L,R=302]
