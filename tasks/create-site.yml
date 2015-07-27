@@ -6,7 +6,7 @@
 
 - name: Copy optional rewrite rules file
   template: 
-    src: "apache2/rewrite-rules.conf"
+    src: "apache2/rewrite-rules.conf.j2"
     dest: /etc/apache2/sites-available/{{ app_name }}-rewrite-rules.conf.j2
   notify: Restart apache
   when: custom_rewrite_rules_path is not defined
