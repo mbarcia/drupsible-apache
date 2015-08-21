@@ -40,7 +40,6 @@ php5_packages_ontop:
   - php5-mcrypt
   - php5-mysql
 
-# apache_host: "127.0.0.1"
 apache_port: "80"
 apache_ssl_port: "443"
 

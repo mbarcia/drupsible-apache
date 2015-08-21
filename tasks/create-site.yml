@@ -31,7 +31,7 @@
 - name: Enable apache2 cur, build and bak vhosts
   file:
     src: /etc/apache2/sites-available/{{ app_name }}{{ item }}.conf
-    dest: /etc/apache2/sites-enabled/{{ app_name }}{{ item }}.conf
+    dest: /etc/apache2/sites-enabled/0-{{ app_name }}{{ item }}.conf
     state: link
   with_items:
     - ""
