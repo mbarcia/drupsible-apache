@@ -210,4 +210,4 @@
   </Directory>
 {% endif %}
 
-  ServerAdmin {{ app_env.admin_email|default('admin@' + webhost + '.' + ansible_fqdn) }}
+  ServerAdmin {{ app_env.admin_email|default('admin@' + '.' + ansible_fqdn) }}
