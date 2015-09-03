@@ -23,7 +23,7 @@
 - name: Copy apache2 vhost-common
   template:
     src: apache2/vhost-common.conf.j2
-    dest: "/etc/apache2/sites-available/{{ app_name }}{{ item }}-common.conf"
+    dest: "/etc/apache2/sites-available/{{ app_name }}-common{{ item }}.conf"
   with_items:
     - ""
     - ".bak"
@@ -52,13 +52,6 @@
   with_items:
     - ""
     - ".bak"
-  notify: Restart apache
-
-- name: Enable common config to be included by http and https vhosts
-  file:
-    src: "/etc/apache2/sites-available/{{ app_name }}-common.conf"
-    dest: "/etc/apache2/sites-enabled/{{ app_name }}-common.conf"
-    state: link
   notify: Restart apache
 
 - name: Enable apache2 cur, build and bak vhosts (https)

@@ -6,5 +6,5 @@
   ServerAlias                           {{ alias }}
 {% endfor %}
 
-  Include {{ app_name }}{{ item }}-common.conf
+  Include sites-available/{{ app_name }}{{ item }}-common.conf
 </VirtualHost>
