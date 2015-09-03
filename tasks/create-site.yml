@@ -23,7 +23,7 @@
 - name: Copy apache2 vhost-common
   template:
     src: apache2/vhost-common.conf.j2
-    dest: "/etc/apache2/sites-available/{{ app_name }}-common{{ item }}.conf"
+    dest: "/etc/apache2/{{ app_name }}-common{{ item }}.conf"
   with_items:
     - ""
     - ".bak"
