@@ -1,6 +1,10 @@
 # {{ ansible_managed }}
 
+{% if apache2_pki_crt is defined and apache2_pki_key is defined %}
+<VirtualHost {{ apache_host|default('*') }}:{{ apache_port }} {{ apache_host|default('*') }}:{{ apache_ssl_port }}>
+{% else %}
 <VirtualHost {{ apache_host|default('*') }}:{{ apache_port }}>
+{% endif %}
   ServerName                            {{ webhost }}{{ item }}.{{ webdomain }}
 {% for alias in app_env.aliases|default([]) %}
   ServerAlias                           {{ alias }}
@@ -9,6 +13,15 @@
   DocumentRoot                 {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}
   ErrorLog                     {{ vhost_base_path }}/{{ app_name }}/logs/error.log
   CustomLog                    {{ vhost_base_path }}/{{ app_name }}/logs/access.log common
+
+{% if apache2_pki_crt is defined and apache2_pki_key is defined %}
+  <If "%{SERVER_PROTOCOL} == 'HTTPS'">
+    SSLEngine on
+    SSLCertificateFile "{{ apache2_pki_crt }}"
+    SSLCertificateKeyFile "{{ apache2_pki_key }}"
+  </If>
+{% endif %}
+
 {% if apache2_mpm == 'prefork' %}
   php_value error_log    {{ vhost_base_path }}/{{ app_name }}/logs/php.error.log
 {% if item.php_flag is defined and item.php_flag %}

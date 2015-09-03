@@ -15,8 +15,6 @@ galaxy_info:
 dependencies: 
   - role: debops.secret
 
-  - role: debops.users
-
   - role: debops.ferm
     ferm_input_list:
       - type: 'dport_accept'
