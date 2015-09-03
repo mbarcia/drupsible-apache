@@ -12,5 +12,5 @@
   SSLCertificateKeyFile "{{ apache2_pki_key }}"
 {% endif %}
 
-  Include {{ app_name }}-common.conf
+  Include {{ app_name }}{{ item }}-common.conf
 </VirtualHost>

@@ -7,7 +7,7 @@
 - name: Copy optional rewrite rules file
   template: 
     src: "apache2/rewrite-rules.conf.j2"
-    dest: /etc/apache2/sites-available/{{ app_name }}-rewrite-rules.conf
+    dest: "/etc/apache2/sites-available/{{ app_name }}-rewrite-rules.conf"
   notify: Restart apache
   when: custom_rewrite_rules_path is not defined
   tags: apache2
@@ -15,7 +15,7 @@
 - name: Copy custom optional rewrite rules file
   template: 
     src: "{{ custom_rewrite_rules_path }}"
-    dest: /etc/apache2/sites-available/{{ app_name }}-rewrite-rules.conf
+    dest: "/etc/apache2/sites-available/{{ app_name }}-rewrite-rules.conf"
   notify: Restart apache
   when: custom_rewrite_rules_path is defined
   tags: apache2
@@ -23,12 +23,15 @@
 - name: Copy apache2 vhost-common
   template:
     src: apache2/vhost-common.conf.j2
-    dest: /etc/apache2/sites-available/{{ app_name }}-common.conf
+    dest: "/etc/apache2/sites-available/{{ app_name }}{{ item }}-common.conf"
+  with_items:
+    - ""
+    - ".bak"
 
 - name: Create apache2 vhosts (http)
   template:
     src: apache2/vhost.conf.j2
-    dest: /etc/apache2/sites-available/{{ app_name }}{{ item }}.conf
+    dest: "/etc/apache2/sites-available/{{ app_name }}{{ item }}.conf"
   with_items:
     - ""
     - ".bak"
@@ -36,15 +39,15 @@
 - name: Create apache2 vhosts (https)
   template:
     src: apache2/vhost-ssl.conf.j2
-    dest: /etc/apache2/sites-available/{{ app_name }}-ssl{{ item }}.conf
+    dest: "/etc/apache2/sites-available/{{ app_name }}-ssl{{ item }}.conf"
   with_items:
     - ""
     - ".bak"
 
 - name: Enable apache2 cur, build and bak vhosts
   file:
-    src: /etc/apache2/sites-available/{{ app_name }}{{ item }}.conf
-    dest: /etc/apache2/sites-enabled/0-{{ app_name }}{{ item }}.conf
+    src: "/etc/apache2/sites-available/{{ app_name }}{{ item }}.conf"
+    dest: "/etc/apache2/sites-enabled/0-{{ app_name }}{{ item }}.conf"
     state: link
   with_items:
     - ""
@@ -53,8 +56,8 @@
 
 - name: Enable apache2 cur, build and bak vhosts (https)
   file:
-    src: /etc/apache2/sites-available/{{ app_name }}-ssl{{ item }}.conf
-    dest: /etc/apache2/sites-enabled/0-{{ app_name }}-ssl{{ item }}.conf
+    src: "/etc/apache2/sites-available/{{ app_name }}-ssl{{ item }}.conf"
+    dest: "/etc/apache2/sites-enabled/0-{{ app_name }}-ssl{{ item }}.conf"
     state: link
   with_items:
     - ""
