@@ -1,0 +1,214 @@
+# {{ ansible_managed }}
+
+  DocumentRoot                 {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}
+  ErrorLog                     {{ vhost_base_path }}/{{ app_name }}/logs/error.log
+  CustomLog                    {{ vhost_base_path }}/{{ app_name }}/logs/access.log common
+
+{% if apache2_mpm == 'prefork' %}
+  php_value error_log    {{ vhost_base_path }}/{{ app_name }}/logs/php.error.log
+{% if item.php_flag is defined and item.php_flag %}
+{% for key, value in item.php_flag.iteritems() %}
+  php_flag {{ key }} {{ value }}
+{% endfor %}
+
+{% endif %}
+{% if item.php_value is defined and item.php_value %}
+{% for key, value in item.php_value.iteritems() %}
+  php_value {{ key }} {{ value }}
+{% endfor %}
+
+{% endif %}
+{% if item.php_admin_flag is defined and item.php_admin_flag %}
+{% for key, value in item.php_admin_flag.iteritems() %}
+  php_admin_flag {{ key }} {{ value }}
+{% endfor %}
+
+{% endif %}
+{% if item.open_basedir is defined and item.open_basedir %}
+  php_admin_value open_basedir {{ item.open_basedir }}
+{% endif %}
+{% if item.php_admin_value is defined and item.php_admin_value %}
+{% for key, value in item.php_admin_value.iteritems() %}
+  php_admin_value {{ key }} {{ value }}
+{% endfor %}
+
+{% endif %}
+{% endif %}
+
+{% if apache2_mpm != 'prefork' %}
+  # Force Apache to pass the Authorization
+  # header to PHP: required for "basic_auth" under PHP-FPM and FastCGI
+  SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
+
+{% if uds_available %}
+  <FilesMatch \.php$>
+    SetHandler "proxy:unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}"
+  </FilesMatch>
+{% else %}
+  ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ app_env.fpm_listen }}{{ vhost_base_path }}/{{ app_name }}/public_html/$1
+  {% endif %}
+{% endif %}
+
+  <Directory /> 
+    Require all denied
+
+    # Follow symbolic links.
+    Options FollowSymLinks
+
+    # Prevent .htaccess reading if set to None.
+    AllowOverride {{ allow_override_htaccess|default('All') }}
+  </Directory>
+
+  <Directory {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}>
+{% if allow_override_htaccess == 'None' %}
+    Require all granted
+
+    # Turn off all options we don't need.
+    Options None
+
+    # Don't show directory listings for URLs which map to a directory.
+    Options -Indexes
+    
+    Options -Multiviews
+    
+    # Follow symbolic links in this directory.
+    Options +FollowSymLinks
+    
+    # Set the default handler.
+    DirectoryIndex index.php
+  
+    # Protect files and directories from prying eyes.
+    <FilesMatch "\.(engine|inc|info|install|make|module|profile|test|po|sh|.*sql|theme|tpl(\.php)?|xtmpl)(~|\.sw[op]|\.bak|\.orig|\.save)?$|^(\..*|Entries.*|Repository|Root|Tag|Template)$|^#.*#$|\.php(~|\.sw[op]|\.bak|\.orig\.save)$">
+      Order allow,deny
+    </FilesMatch>
+    
+    # Force simple error message for requests for non-existent favicon.ico.
+    <Files favicon.ico>
+      ErrorDocument 404 '<html xmlns="http://www.w3.org/1999/xhtml"><head><title>404 Not Found</title></head><body><h1>Not Found</h1><p>favicon.ico was not found on this server.</p></body></html>'
+    </Files>
+    
+    # Requires mod_expires to be enabled.
+    <IfModule mod_expires.c>
+      # Enable expirations.
+      ExpiresActive On
+    
+      # Cache all files for 2 weeks after access (A).
+      ExpiresDefault A1209600
+    
+      <FilesMatch \.php$>
+        # Do not allow PHP scripts to be cached unless they explicitly send cache
+        # headers themselves. Otherwise all scripts would have to overwrite the
+        # headers set by mod_expires if they want another caching behavior. This may
+        # fail if an error occurs early in the bootstrap process, and it may cause
+        # problems if a non-Drupal PHP file is installed in a subdirectory.
+        ExpiresActive Off
+      </FilesMatch>
+    </IfModule>
+  
+    # Various rewrite rules.
+    <IfModule mod_rewrite.c>
+      RewriteEngine on
+    
+      # Set "protossl" to "s" if we were accessed via https://.  This is used later
+      # if you enable "www." stripping or enforcement, in order to ensure that
+      # you don't bounce between http and https.
+      RewriteRule ^ - [E=protossl]
+      RewriteCond %{HTTPS} on
+      RewriteRule ^ - [E=protossl:s]
+    
+      # Make sure Authorization HTTP header is available to PHP
+      # even when running as CGI or FastCGI.
+      RewriteRule ^ - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+    
+      # Block access to "hidden" directories whose names begin with a period. This
+      # includes directories used by version control systems such as Subversion or
+      # Git to store control files. Files whose names begin with a period, as well
+      # as the control files used by CVS, are protected by the FilesMatch directive
+      # above.
+      #
+      # NOTE: This only works when mod_rewrite is loaded. Without mod_rewrite, it is
+      # not possible to block access to entire directories from .htaccess, because
+      # <DirectoryMatch> is not allowed here.
+      #
+      # If you do not have mod_rewrite installed, you should remove these
+      # directories from your webroot or otherwise protect them from being
+      # downloaded.
+      RewriteRule "(^|/)\." - [F]
+    
+      Include sites-available/{{ app_name }}-rewrite-rules.conf
+      
+      # Pass all requests not referring directly to files in the filesystem to
+      # index.php. Clean URLs are handled in drupal_environment_initialize().
+      RewriteCond %{REQUEST_FILENAME} !-f
+      RewriteCond %{REQUEST_FILENAME} !-d
+      RewriteCond %{REQUEST_URI} !=/favicon.ico
+      RewriteRule ^ index.php [L]
+    
+      # Rules to correctly serve gzip compressed CSS and JS files.
+      # Requires both mod_rewrite and mod_headers to be enabled.
+      <IfModule mod_headers.c>
+        # Serve gzip compressed CSS files if they exist and the client accepts gzip.
+        RewriteCond %{HTTP:Accept-encoding} gzip
+        RewriteCond %{REQUEST_FILENAME}\.gz -s
+        RewriteRule ^(.*)\.css $1\.css\.gz [QSA]
+    
+        # Serve gzip compressed JS files if they exist and the client accepts gzip.
+        RewriteCond %{HTTP:Accept-encoding} gzip
+        RewriteCond %{REQUEST_FILENAME}\.gz -s
+        RewriteRule ^(.*)\.js $1\.js\.gz [QSA]
+    
+        # Serve correct content types, and prevent mod_deflate double gzip.
+        RewriteRule \.css\.gz$ - [T=text/css,E=no-gzip:1]
+        RewriteRule \.js\.gz$ - [T=text/javascript,E=no-gzip:1]
+    
+        <FilesMatch "(\.js\.gz|\.css\.gz)$">
+          # Serve correct encoding type.
+          Header set Content-Encoding gzip
+          # Force proxies to cache gzipped & non-gzipped css/js files separately.
+          Header append Vary Accept-Encoding
+        </FilesMatch>
+      </IfModule>
+    </IfModule>
+{% endif %}
+  </Directory>
+
+{% if allow_override_htaccess == 'None' %}
+  <Directory {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}/sites/default/files>
+    # Turn off all options we don't need.
+    Options None
+    Options +FollowSymLinks
+
+    # Set the catch-all handler to prevent scripts from being executed.
+    SetHandler Drupal_Security_Do_Not_Remove_See_SA_2006_006
+    <Files *>
+      # Override the handler again if we're run later in the evaluation list.
+      SetHandler Drupal_Security_Do_Not_Remove_See_SA_2013_003
+    </Files>
+
+    # If we know how to do it safely, disable the PHP engine entirely.
+    <IfModule mod_php5.c>
+      php_flag engine off
+    </IfModule>
+
+    <IfModule mod_expires.c>
+      ExpiresActive On
+      ExpiresDefault "access plus 1 hour"
+    </IfModule>
+
+  </Directory>
+{% endif %}
+
+{% if allow_override_htaccess == 'None' %}
+  <Directory {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}/sites/default/files/private>
+    Require all denied
+
+    <IfModule mod_expires.c>
+      ExpiresActive On
+      ExpiresDefault "access plus 1 hour"
+    </IfModule>
+
+  </Directory>
+{% endif %}
+
+  ServerAdmin {{ app_env.admin_email|default('admin@' + webhost + '.' + ansible_fqdn) }}
+</VirtualHost>

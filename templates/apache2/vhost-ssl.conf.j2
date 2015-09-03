@@ -1,10 +1,16 @@
 # {{ ansible_managed }}
 
-<VirtualHost {{ apache_host|default('*') }}:{{ apache_port }}>
+<VirtualHost {{ apache_host|default('*') }}:{{ apache_ssl_port }}>
   ServerName                            {{ webhost }}{{ item }}.{{ webdomain }}
 {% for alias in app_env.aliases|default([]) %}
   ServerAlias                           {{ alias }}
 {% endfor %}
+
+{% if apache2_pki_crt is defined and apache2_pki_key is defined %}
+  SSLEngine on
+  SSLCertificateFile "{{ apache2_pki_crt }}"
+  SSLCertificateKeyFile "{{ apache2_pki_key }}"
+{% endif %}
 
   Include {{ app_name }}-common.conf
 </VirtualHost>
