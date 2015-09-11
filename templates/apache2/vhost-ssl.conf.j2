@@ -7,9 +7,19 @@
 {% endfor %}
 
 {% if apache2_pki_crt is defined and apache2_pki_key is defined %}
+  <IfModule mod_ssl.c>
   SSLEngine on
   SSLCertificateFile "{{ apache2_pki_crt }}"
   SSLCertificateKeyFile "{{ apache2_pki_key }}"
+  </IfModule>
+
+  <IfModule gnutls.c>
+    GnuTLSEnable on
+    GnuTLSPriorities NORMAL:!DHE-RSA:!DHE-DSS:!AES-256-CBC
+    GnuTLSCertificateFile "{{ apache2_pki_crt }}"
+    GnuTLSKeyFile         "{{ apache2_pki_key }}"
+  </IfModule>
+
 {% endif %}
 
   Include {{ app_name }}-common{{ item }}.conf
