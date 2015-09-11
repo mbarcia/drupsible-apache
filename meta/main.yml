@@ -18,7 +18,7 @@ dependencies:
   - role: debops.ferm
     ferm_input_list:
       - type: 'dport_accept'
-        dport: [ {{ apache_port|default('http') }}, 'https' ]
+        dport: [ "{{ apache_port | default('http') }}", 'https' ]
         saddr: '{{ apache2_allow + apache2_group_allow + apache2_host_allow }}'
         accept_any: True
         filename: 'apache2_dependency_accept'
