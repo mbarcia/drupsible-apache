@@ -44,8 +44,24 @@
   <FilesMatch \.php$>
     SetHandler "proxy:unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}"
   </FilesMatch>
+
+  # Ping/status to probe PHP-FPM (status allowed only from load balancers, local and trusted IPs)
+  <LocationMatch "{{ server_status_path }}$">
+    Require ip 127.0.0.1
+    Require ip 10.0.0.0/8
+{% for host in groups.drupsible_varnish %}
+    Require ip {{ hostvars[host].ansible_eth0.ipv4.address }}
+{% endfor %}
+{% for ip in varnish_allowed_hosts %}
+    Require ip {{ ip }}
+{% endfor %}
+  </LocationMatch>
+
+  ProxyPassMatch ^/({{ ping_path }}|{{ server_status_path }})$ unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}/
+
 {% else %}
   ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ app_env.fpm_listen }}{{ vhost_base_path }}/{{ app_name }}/public_html/$1
+  ProxyPassMatch ^{{ server_status_path }}$ fcgi://{{ app_env.fpm_listen }}
   {% endif %}
 {% endif %}
 
