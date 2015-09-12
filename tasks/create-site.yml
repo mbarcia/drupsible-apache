@@ -63,4 +63,5 @@
   with_items:
     - ""
     - ".bak"
+  when: apache_https_enabled
   notify: Restart apache
