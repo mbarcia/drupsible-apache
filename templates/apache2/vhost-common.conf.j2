@@ -40,11 +40,6 @@
   # header to PHP: required for "basic_auth" under PHP-FPM and FastCGI
   SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
 
-{% if uds_available %}
-  <FilesMatch \.php$>
-    SetHandler "proxy:unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}"
-  </FilesMatch>
-
   # Ping/status to probe PHP-FPM (status allowed only from load balancers, local and trusted IPs)
   <LocationMatch "{{ server_status_path }}$">
     Require ip 127.0.0.1
@@ -57,11 +52,15 @@
 {% endfor %}
   </LocationMatch>
 
-  ProxyPassMatch ^/({{ ping_path }}|{{ server_status_path }})$ unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}/
+{% if uds_available %}
+  <FilesMatch \.php$>
+    SetHandler "proxy:unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}"
+  </FilesMatch>
 
+  ProxyPassMatch ^({{ ping_path }}|{{ server_status_path }})$ unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}/
 {% else %}
   ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ app_env.fpm_listen }}{{ vhost_base_path }}/{{ app_name }}/public_html/$1
-  ProxyPassMatch ^{{ server_status_path }}$ fcgi://{{ app_env.fpm_listen }}
+  ProxyPassMatch ^({{ ping_path }}|{{ server_status_path }})$ fcgi://{{ app_env.fpm_listen }}
   {% endif %}
 {% endif %}
 
