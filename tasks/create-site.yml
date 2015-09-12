@@ -43,6 +43,7 @@
   with_items:
     - ""
     - ".bak"
+  when: apache_https_enabled
 
 - name: Enable apache2 cur, build and bak vhosts
   file:

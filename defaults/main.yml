@@ -81,3 +81,5 @@ disabled_vhost_sites: &disabled
       admin_email: 'admin@dev.example.com',
       disabled: True
     }
+
+apache_https_enabled: no
