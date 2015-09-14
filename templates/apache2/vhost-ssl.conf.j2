@@ -13,7 +13,7 @@
   SSLCertificateKeyFile {{ apache2_pki_key }}
 {% if apache2_ssl_params is defined and apache2_ssl_params %}
 {% for key, value in apache2_ssl_params.iteritems() %}
-  {{ key }}  {{ value }}\
+  {{ key }}  {{ value }}
 {% endfor %}
 {% endif %}
 
