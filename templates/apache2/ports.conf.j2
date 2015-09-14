@@ -1,24 +1,24 @@
 # {{ ansible_managed }}
 
-{% if apache_host is defined and apache_host != '' %}
-Listen {{ apache_host }}:{{ apache_port }}
+{% if apache2_host is defined and apache2_host != '' %}
+Listen {{ apache2_host }}:{{ apache2_port }}
 {% else %}
-Listen {{ apache_port }}
+Listen {{ apache2_port }}
 {% endif %}
 
 <IfModule mod_ssl.c>
-{% if apache_host is defined and apache_host != '' %}
-    Listen {{ apache_host }}:{{ apache_ssl_port }}
+{% if apache2_host is defined and apache2_host != '' %}
+    Listen {{ apache2_host }}:{{ apache2_ssl_port }}
 {% else %}
-    Listen {{ apache_ssl_port }}
+    Listen {{ apache2_ssl_port }}
 {% endif %}
 
 </IfModule>
 
 <IfModule mod_gnutls.c>
-{% if apache_host is defined and apache_host != '' %}
-    Listen {{ apache_host }}:{{ apache_ssl_port }}
+{% if apache2_host is defined and apache2_host != '' %}
+    Listen {{ apache2_host }}:{{ apache2_ssl_port }}
 {% else %}
-    Listen {{ apache_ssl_port }}
+    Listen {{ apache2_ssl_port }}
 {% endif %}
 </IfModule>

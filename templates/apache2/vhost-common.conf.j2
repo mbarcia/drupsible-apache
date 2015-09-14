@@ -41,7 +41,7 @@
   SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
 
   # Ping/status to probe PHP-FPM (status allowed only from load balancers, local and trusted IPs)
-  <LocationMatch "{{ server_status_path }}$">
+  <LocationMatch "{{ apache2_fpm_server_status_path }}$">
     Require ip 127.0.0.1
     Require ip 10.0.0.0/8
 {% for host in groups.drupsible_varnish %}
@@ -57,10 +57,10 @@
     SetHandler "proxy:unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}"
   </FilesMatch>
 
-  ProxyPassMatch ^({{ ping_path }}|{{ server_status_path }})$ unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}/
+  ProxyPassMatch ^({{ apache2_fpm_ping_path }}|{{ apache2_fpm_server_status_path }})$ unix:{{ app_env.fpm_listen }}|fcgi://{{ webhost }}{{ item }}.{{ webdomain }}/
 {% else %}
   ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ app_env.fpm_listen }}{{ vhost_base_path }}/{{ app_name }}/public_html/$1
-  ProxyPassMatch ^({{ ping_path }}|{{ server_status_path }})$ fcgi://{{ app_env.fpm_listen }}
+  ProxyPassMatch ^({{ apache2_fpm_ping_path }}|{{ apache2_fpm_server_status_path }})$ fcgi://{{ app_env.fpm_listen }}
   {% endif %}
 {% endif %}
 
