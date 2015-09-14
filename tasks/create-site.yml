@@ -43,7 +43,7 @@
   with_items:
     - ""
     - ".bak"
-  when: apache_https_enabled
+  when: apache2_https_enabled
 
 - name: Enable apache2 cur, build and bak vhosts
   file:
@@ -63,5 +63,5 @@
   with_items:
     - ""
     - ".bak"
-  when: apache_https_enabled
+  when: apache2_https_enabled
   notify: Restart apache

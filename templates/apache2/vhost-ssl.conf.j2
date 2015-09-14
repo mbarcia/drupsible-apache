@@ -9,8 +9,14 @@
 {% if apache2_pki_crt is defined and apache2_pki_key is defined %}
   <IfModule mod_ssl.c>
   SSLEngine on
-  SSLCertificateFile "{{ apache2_pki_crt }}"
-  SSLCertificateKeyFile "{{ apache2_pki_key }}"
+  SSLCertificateFile {{ apache2_pki_crt }}
+  SSLCertificateKeyFile {{ apache2_pki_key }}
+{% if apache2_ssl_params is defined and apache2_ssl_params %}
+{% for key, value in apache2_ssl_params.iteritems() %}
+  {{ key }}  {{ value }}\
+{% endfor %}
+{% endif %}
+
   </IfModule>
 
   <IfModule gnutls.c>
