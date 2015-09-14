@@ -71,7 +71,7 @@
     Options FollowSymLinks
 
     # Prevent .htaccess reading if set to None.
-    AllowOverride {{ allow_override_htaccess|default('All') }}
+    AllowOverride {{ allow_override_htaccess|default('None') }}
   </Directory>
 
   <Directory {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}>
