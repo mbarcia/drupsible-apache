@@ -6,9 +6,11 @@ galaxy_info:
   platforms:
     - name: Debian
       versions:
+        - jessie
         - wheezy
     - name: Ubuntu
       versions:
+        - vivid
         - trusty
   categories:
     - web

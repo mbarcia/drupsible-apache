@@ -187,6 +187,16 @@
 {% endif %}
   </Directory>
 
+  <IfModule mod_expires.c>
+    ExpiresActive On
+
+  {% for type in apache2_expires_static_types %}
+  ExpiresByType '{{ type }}' '{{ apache2_expires }}'
+  {% endfor %}
+
+    ExpiresDefault '{{ apache2_expires_default }}'
+  </IfModule>
+
 {% if allow_override_htaccess == 'None' %}
   <Directory {{ vhost_base_path }}/{{ app_name }}/public_html{{ item }}/sites/default/files>
     # Turn off all options we don't need.
