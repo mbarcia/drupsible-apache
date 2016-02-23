@@ -1,2 +1,5 @@
 ---
-- include: apache2.yml
+- name: Restart apache
+  service:
+    name: apache2
+    state: restarted

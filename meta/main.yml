@@ -32,6 +32,6 @@ dependencies:
   - role: debops.postfix
     postfix: [ 'client', 'sender_dependent' ]
     postfix_relayhost: "[{{ smtp_server }}]:{{ smtp_port }}"
-    postfix_smtp_sasl_password_map: "{ '{{ smtp_server }}:{{ smtp_port }}': '{{ smtp_user }}' }"
+    postfix_smtp_sasl_password_map: "{ '[{{ smtp_server }}]:{{ smtp_port }}': '{{ smtp_user }}' }"
     postfix_sender_dependent_relayhost_map: "{ '{{ smtp_user }}': '{{ smtp_server }}:{{ smtp_port }}' }"
-    when: "smtp_server is defined and smtp_port is defined and smtp_user is defined"
+    when: smtp_server is defined and smtp_port is defined and smtp_user is defined
