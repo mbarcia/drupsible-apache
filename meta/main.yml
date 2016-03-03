@@ -14,24 +14,4 @@ galaxy_info:
         - trusty
   categories:
     - web
-dependencies: 
-  - role: debops.secret
 
-  - role: debops.ferm
-    ferm_input_list:
-      - type: 'dport_accept'
-        dport: [ "{{ apache2_port | default('http') }}", 'https' ]
-        saddr: '{{ apache2_allow + apache2_group_allow + apache2_host_allow }}'
-        accept_any: True
-        filename: 'apache2_dependency_accept'
-        weight: '20'
-
-  - role: drupsible.newrelic
-    when: "'newrelic-php5' in php5_packages_ontop and apache2_mpm == 'prefork'"
-
-  - role: debops.postfix
-    postfix: [ 'client', 'sender_dependent' ]
-    postfix_relayhost: "[{{ smtp_server }}]:{{ smtp_port }}"
-    postfix_smtp_sasl_password_map: "{ '[{{ smtp_server }}]:{{ smtp_port }}': '{{ smtp_user }}' }"
-    postfix_sender_dependent_relayhost_map: "{ '{{ smtp_user }}': '{{ smtp_server }}:{{ smtp_port }}' }"
-    when: smtp_server is defined and smtp_port is defined and smtp_user is defined
