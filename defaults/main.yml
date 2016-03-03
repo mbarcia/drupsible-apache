@@ -109,9 +109,11 @@ apache2_expires_static_types:
 apache2_expires_default: 'access plus 1 day'
 
 apache2_ferm_dependent_rules:
-- type: 'dport_accept'
+- type: 'accept'
   dport: [ "{{ apache2_port | default('http') }}", 'https' ]
   saddr: '{{ apache2_allow + apache2_group_allow + apache2_host_allow }}'
   accept_any: True
-  filename: 'apache2_dependency_accept'
   weight: '20'
+  role: 'apache2'
+  name: 'http_https'
+  multiport: True
