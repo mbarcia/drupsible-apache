@@ -3,7 +3,7 @@
   apt:
     pkg: "{{ item }}"
     state: latest
-  with_items: php5_packages
+  with_items: mod_php5_packages
   notify: Restart apache 
   tags: php
 
@@ -11,7 +11,7 @@
   apt:
     pkg: "{{ item }}"
     state: latest
-  with_items: php5_packages_ontop
+  with_items: mod_php5_packages_ontop
   notify: Restart apache 
   tags: php
 

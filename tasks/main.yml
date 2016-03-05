@@ -1,7 +1,7 @@
 ---
 - include: apache2.yml
 
-- include: php.yml
+- include: mod-php.yml
   when: apache2_mpm == 'prefork' 
 
 - include: apache2_worker_event.yml
