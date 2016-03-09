@@ -25,8 +25,8 @@
       # uncomment the following line:
       # RewriteBase /
     
-{% if app_i18n is defined and app_i18n and app_languages is defined %}
-  {% for language in app_languages %}
+{% if app_i18n|default(False)|bool and drupal_version == '7' %}
+  {% for language in app_languages|default([]) %}
       ## On frontpage redirect to /{{ language }} if the browser language starts with {{ language }}
       RewriteCond %{HTTP:Accept-Language} ^{{ language }}.*$ [NC]
       RewriteCond %{REQUEST_URI} ^/$ [NC]
