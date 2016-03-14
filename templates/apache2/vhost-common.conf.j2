@@ -44,10 +44,7 @@
   <LocationMatch "{{ apache2_fpm_server_status_path }}$">
     Require ip 127.0.0.1
     Require ip 10.0.0.0/8
-{% for host in groups.drupsible_varnish %}
-    Require ip {{ hostvars[host].ansible_eth0.ipv4.address }}
-{% endfor %}
-{% for ip in varnish_allowed_hosts %}
+{% for ip in apache2_allowed_hosts %}
     Require ip {{ ip }}
 {% endfor %}
   </LocationMatch>
