@@ -117,3 +117,12 @@ apache2_ferm_dependent_rules:
   role: 'apache2'
   name: 'http_https'
   multiport: True
+
+# This is one very useful setting, that has to be disabled by default.
+# Set it to "yes" and apache2 will redirect from the frontpage 
+# http://example.com/ to http://example.com/<language>
+# If ANY of the visitor browser's language starts with <language>. 
+# The site's default language takes precedence over any other.
+# This setting only works when custom_rewrite_rules_path is not defined 
+# and the default rewrite rules are used.
+apache2_redirect_front2lang: no
