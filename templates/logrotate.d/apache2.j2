@@ -1,4 +1,4 @@
-{{ vhost_base_path }}/{{ app_name }}/logs/*.log {
+{{ vhost_base_path }}/{{ app_name }}/logs/access.log {{ vhost_base_path }}/{{ app_name }}/logs/error.log {
   daily
   missingok
   compress
