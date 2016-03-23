@@ -25,7 +25,7 @@
       # uncomment the following line:
       # RewriteBase /
 
-{% if app_i18n|default(False)|bool and apache2_redirect_front2lang|default(False)|bool and drupal_version|version_compare('7', '==') %}
+{% if app_i18n_enabled|default(False)|bool and app_drupal_version == '7' %}
   {% for language in app_languages|default([]) %}
       ## ONLY on frontpage, redirect to /{{ language }} if ANY of the browser languages 
       ## starts with '{{ language }}'

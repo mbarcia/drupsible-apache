@@ -32,7 +32,7 @@ apache2_modules:
   - status
   - ssl
 
-php5_packages_ontop:
+apache2_php5_packages_ontop:
   - php-pear
   - php-soap
   - php5-curl
