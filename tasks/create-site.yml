@@ -3,8 +3,8 @@
   file:
     path: "{{ vhost_base_path }}/{{ app_name }}/logs"
     state: directory
-    owner: "{{ app_env['user'] }}"
-    group: "{{ app_env['group'] }}"
+    owner: "{{ app_user }}"
+    group: "{{ app_group }}"
 
 - name: Copy optional rewrite rules file
   template: 

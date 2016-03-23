@@ -2,7 +2,7 @@
 
 <VirtualHost {{ apache2_host|default('*') }}:{{ apache2_ssl_port }}>
   ServerName                            {{ apache2_webhost }}{{ item }}.{{ webdomain }}
-{% for alias in app_env.aliases|default([]) %}
+{% for alias in app_server_aliases|default([]) %}
   ServerAlias                           {{ alias }}
 {% endfor %}
 
