@@ -21,14 +21,30 @@
   changed_when: False
   sudo: yes
 
-- name: Init UDS flag
+- name: Initialize Unix Domain Sockets availability
   set_fact: 
-    uds_available: no
+    apache2_uds_available: no
 
-- name: Apache Unix Domain Sockets (UDS) are available when 2.4.10+
+- name: Apache implements Unix Domain Sockets (UDS) since 2.4.10+
   when: 'apache2_version is defined and apache2_version.stdout|match("Server version: Apache/2\\.4\\.1.")'
   set_fact: 
-    uds_available: yes
+    apache2_uds_available: yes
+
+- name: Make sure that Ansible local facts directory is present
+  file:
+    path: '/etc/ansible/facts.d'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+
+- name: Save apache2 local facts
+  template:
+    src: 'etc/ansible/facts.d/apache2.fact.j2'
+    dest: '/etc/ansible/facts.d/apache2.fact'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
 
 - name: Install Apache2 additional pkgs
   apt:
