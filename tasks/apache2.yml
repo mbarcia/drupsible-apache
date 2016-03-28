@@ -50,7 +50,7 @@
     state: latest
     update_cache: yes
     cache_valid_time: 86400
-  with_items: apache2_packages_ontop
+  with_items: apache2_packages_ontop|default([])
   notify: Restart apache
 
 - name: Disable Apache2 MPM worker and event, if prefork is requested
