@@ -41,6 +41,11 @@
     owner: 'root'
     group: 'root'
     mode: '0644'
+  register: apache2_register_local_facts
+
+- name: Gather facts if they were modified
+  action: setup
+  when: apache2_register_local_facts.changed
 
 - name: Install Apache2 additional pkgs
   package:
