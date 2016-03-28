@@ -465,7 +465,7 @@ max_input_time = 60
 ; Maximum amount of memory a script may consume (128MB)
 ; http://php.net/memory-limit
 ; memory_limit = 128M
-memory_limit = {{ memory_limit }}
+memory_limit = {{ apache2_mod_php_memory_limit }}
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Error handling and logging ;
@@ -611,7 +611,7 @@ track_errors = Off
 ; Development Value: On
 ; Production value: Off
 ; http://php.net/html-errors
-html_errors = {{ html_errors }}
+html_errors = {{ apache2_mod_php_html_errors }}
 
 ; If html_errors is set On PHP produces clickable error messages that direct
 ; to a page describing the error or function causing the error in detail.
@@ -740,7 +740,7 @@ auto_globals_jit = On
 
 ; Maximum size of POST data that PHP will accept.
 ; http://php.net/post-max-size
-post_max_size = {{ post_max_size }}
+post_max_size = {{ apache2_mod_php_post_max_size }}
 
 ; Magic quotes are a preprocessing feature of PHP where PHP will attempt to
 ; escape any character sequences in GET, POST, COOKIE and ENV data which might
@@ -891,7 +891,7 @@ file_uploads = On
 
 ; Maximum allowed size for uploaded files.
 ; http://php.net/upload-max-filesize
-upload_max_filesize = {{ upload_max_filesize }}
+upload_max_filesize = {{ apache2_mod_php_upload_max_filesize }}
 
 ; Maximum number of files that can be uploaded via a single request
 max_file_uploads = 20
@@ -960,7 +960,7 @@ default_socket_timeout = 60
 [Date]
 ; Defines the default timezone used by the date functions
 ; http://php.net/date.timezone
-date.timezone = '{{ php_timezone }}'
+date.timezone = '{{ apache2_mod_php_timezone }}'
 
 ; http://php.net/date.default-latitude
 ;date.default_latitude = 31.7667

@@ -3,7 +3,7 @@
 - name: setup logrotate.d script for the apache log
   template:
     src: "logrotate.d/apache2.j2"
-    dest: "/etc/logrotate.d/{{ app_name }}-apache2"
+    dest: "/etc/logrotate.d/{{ apache2_site_name }}-apache2"
     owner: root 
     group: root
     mode: 0644

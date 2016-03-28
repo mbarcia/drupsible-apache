@@ -1,8 +1,8 @@
 ---
 - name: Disable apache2 vhosts
   file:
-    path: /etc/apache2/sites-enabled/{{ item['host'] }}.conf
+    path: "/etc/apache2/sites-enabled/{{ item['host'] }}.conf"
     state: absent
-  with_items: disabled_vhost_sites
+  with_items: "{{ apache2_disabled_vhost_sites }}"
   notify: Restart apache
   tags: apache2

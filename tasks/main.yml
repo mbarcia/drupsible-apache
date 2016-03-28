@@ -10,11 +10,6 @@
 - include: create-site.yml
 
 - include: disable-sites.yml
-  when: disabled_vhost_sites is defined
+  when: apache2_disabled_vhost_sites is defined
 
 - include: logrotate.yml
-
-- name: Restart apache2
-  shell: echo "Due to issues like https://github.com/ansible/ansible/issues/11286"
-  changed_when: True
-  notify: Restart apache

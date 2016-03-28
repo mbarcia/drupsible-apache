@@ -2,8 +2,7 @@
 - name: Check MPM flavor
   fail: 
     msg: "Please specify apache2_mpm as prefork, worker, or event."
-  when: apache2_mpm != "prefork" and apache2_mpm != "worker" and apache2_mpm != "event" 
-  tags: apache2
+  when: apache2_mpm != "prefork" and apache2_mpm != "worker" and apache2_mpm != "event"
 
 - name: Install Apache2
   apt:
@@ -13,7 +12,6 @@
     cache_valid_time: 86400
   with_items: apache2_packages
   notify: Restart apache
-  tags: apache2
 
 - name: Register Apache version
   command: "apache2 -v"
@@ -54,7 +52,6 @@
     cache_valid_time: 86400
   with_items: apache2_packages_ontop
   notify: Restart apache
-  tags: apache2
 
 - name: Disable Apache2 MPM worker and event, if prefork is requested
   apache2_module: 
@@ -66,7 +63,6 @@
   when: apache2_mpm == "prefork" 
   ignore_errors: true
   notify: Restart apache
-  tags: apache2
 
 - name: Configure Apache prefork MPM
   template:
@@ -74,7 +70,12 @@
     dest: /etc/apache2/mods-available/mpm_prefork.conf
   when: apache2_mpm == "prefork" 
   notify: Restart apache
-  tags: apache2
+
+- name: Enable SSL
+  apache2_module: 
+    name: ssl
+    state: "{{ apache2_https_enabled|default(False)|bool|ternary('present', 'absent') }}"
+  notify: Restart apache
 
 - name: Enable Apache2 additional modules
   apache2_module: 
@@ -82,46 +83,37 @@
     state: present
   with_items: apache2_modules
   notify: Restart apache
-  tags: apache2
 
 - name: Disable default apache site
   file:
     path: "/etc/apache2/sites-enabled/000-default"
     state: absent
   notify: Restart apache
-  tags: apache2
 
 - name: Disable default-ssl apache site
   file:
     path: "/etc/apache2/sites-enabled/000-default-ssl"
     state: absent
   notify: Restart apache
-  tags: apache2
 
 - name: Configure Apache ports
   template:
     src: apache2/ports.conf.j2
     dest: /etc/apache2/ports.conf
   notify: Restart apache
-  tags: apache2
 
 - name: Tighten Apache security
   copy:
     src: apache2/security.conf
     dest: /etc/apache2/conf-available/security.conf
   notify: Restart apache
-  tags: apache2
 
 - name: Create shared srv folder
   file:
-    path: "{{ vhost_base_path }}/shared"
+    path: "{{ apache2_vhost_base_path }}/shared"
     state: directory
-  tags: apache2
 
 - name: Create blocking robots.txt
   copy:
     src: robots.txt
-    dest: "{{ vhost_base_path }}/shared/robots.txt"
-  tags: apache2
-
-  
+    dest: "{{ apache2_vhost_base_path }}/shared/robots.txt"

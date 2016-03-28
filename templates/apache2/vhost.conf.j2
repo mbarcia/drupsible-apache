@@ -6,5 +6,5 @@
   ServerAlias                           {{ alias }}
 {% endfor %}
 
-  Include {{ app_name }}-common{{ item }}.conf
+  Include {{ apache2_site_name }}-common{{ item }}.conf
 </VirtualHost>

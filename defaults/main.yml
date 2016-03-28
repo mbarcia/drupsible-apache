@@ -30,9 +30,8 @@ apache2_modules:
   - rewrite
   - setenvif
   - status
-  - ssl
 
-apache2_php5_packages_ontop:
+apache2_mod_php5_packages_ontop:
   - php-pear
   - php-soap
   - php5-curl
@@ -51,29 +50,16 @@ apache2_allow: []
 apache2_group_allow: []
 apache2_host_allow: []
 
-post_max_size: "16M"
-upload_max_filesize: "16M"
-php_timezone: "Europe/Madrid"
-memory_limit: "32M"
-html_errors: "Off"
+# php.ini settings, only for prefork MPM (apache's mod_php module)
+apache2_mod_php_post_max_size: "16M"
+apache2_mod_php_upload_max_filesize: "16M"
+apache2_mod_php_timezone: "Europe/Madrid"
+apache2_mod_php_memory_limit: "32M"
+apache2_mod_php_html_errors: "On"
 
-allow_override_htaccess: None
+apache2_allow_override_htaccess: "None"
 
-vhost_base_path: "/var/www"
-
-#
-# Disabled/deleted vhosts
-#
-deleted_vhost_sites:
-  - {
-      host: 'del.example.com',
-      user: 'delexample',
-      group: 'delexample',
-      admin_email: 'admin@del.example.com',
-      disabled: True
-    }
-
-disabled_vhost_sites: &disabled
+apache2_disabled_vhost_sites: &disabled
   - {
       host: 'dev.example.com',
       user: 'devexample',

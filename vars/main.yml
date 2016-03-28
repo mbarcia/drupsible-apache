@@ -1,8 +1,10 @@
 ---
+apache2_vhost_base_path: "/var/www"
+
 apache2_packages:
   - apache2
 
-mod_php5_packages:
+apache2_mod_php5_packages:
   - php5
   - php5-cli
   - php5-common
