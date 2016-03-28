@@ -15,7 +15,7 @@
   command: "apache2 -v"
   register: apache2_version
   changed_when: False
-  sudo: yes
+  become: yes
 
 - name: Initialize Unix Domain Sockets availability
   set_fact: 
