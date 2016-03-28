@@ -1,25 +1,22 @@
 ---
 - name: Install PHP pkgs
-  apt:
-    pkg: "{{ item }}"
-    state: latest
+  package:
+    name: "{{ item }}"
+    state: present
   with_items: apache2_mod_php5_packages
   notify: Restart apache 
-  tags: php
 
 - name: Install PHP additional pkgs
-  apt:
-    pkg: "{{ item }}"
-    state: latest
+  package:
+    name: "{{ item }}"
+    state: present
   with_items: apache2_mod_php5_packages_ontop
   notify: Restart apache 
-  tags: php
 
 - name: Check whether php.ini already exists
   stat: 
     path: "/etc/php5/apache2/php.ini"
   register: stat_php_ini
-  tags: php
 
 - name: Set php.ini if it doesn't exist already
   template:
@@ -27,11 +24,9 @@
     dest: "/etc/php5/apache2/php.ini"
   when: not stat_php_ini.stat.exists
   notify: Restart apache 
-  tags: php
 
 - name: Set PEAR to install stable packages
   command: pear config-set preferred_state stable
   ignore_errors: true
   register: pear_config
   changed_when: pear_config.stdout.find('config-set succeeded') == -1
-  tags: pear

@@ -5,11 +5,9 @@
   when: apache2_mpm != "prefork" and apache2_mpm != "worker" and apache2_mpm != "event"
 
 - name: Install Apache2
-  apt:
-    pkg: "{{ item }}"
-    state: latest
-    update_cache: yes
-    cache_valid_time: 86400
+  package:
+    name: "{{ item }}"
+    state: present
   with_items: apache2_packages
   notify: Restart apache
 
@@ -45,12 +43,11 @@
     mode: '0644'
 
 - name: Install Apache2 additional pkgs
-  apt:
-    pkg: "{{ item }}"
-    state: latest
-    update_cache: yes
-    cache_valid_time: 86400
-  with_items: apache2_packages_ontop|default([])
+  package:
+    name: "{{ item }}"
+    state: present
+  when: item != ''
+  with_items: "{{ apache2_packages_ontop|default([]) }}"
   notify: Restart apache
 
 - name: Disable Apache2 MPM worker and event, if prefork is requested
