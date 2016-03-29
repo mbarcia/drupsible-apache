@@ -9,7 +9,7 @@
     name: "{{ item }}"
     state: present
   with_items: apache2_packages
-  notify: Restart apache
+  notify: "Restart apache"
 
 - name: Register Apache version
   command: "apache2 -v"
@@ -53,62 +53,62 @@
     state: present
   when: item != ''
   with_items: "{{ apache2_packages_ontop|default([]) }}"
-  notify: Restart apache
+  notify: "Restart apache"
 
 - name: Disable Apache2 MPM worker and event, if prefork is requested
   apache2_module: 
     name: "{{ item }}"
     state: absent
   with_items:
-    - mpm_worker
-    - mpm_event
+  - mpm_worker
+  - mpm_event
   when: apache2_mpm == "prefork" 
   ignore_errors: true
-  notify: Restart apache
+  notify: "Restart apache"
 
 - name: Configure Apache prefork MPM
   template:
     src: apache2/mods/mpm_prefork.conf.j2
     dest: /etc/apache2/mods-available/mpm_prefork.conf
   when: apache2_mpm == "prefork" 
-  notify: Restart apache
+  notify: "Restart apache"
 
 - name: Enable SSL
   apache2_module: 
     name: ssl
     state: "{{ apache2_https_enabled|default(False)|bool|ternary('present', 'absent') }}"
-  notify: Restart apache
+  notify: "Restart apache"
 
 - name: Enable Apache2 additional modules
   apache2_module: 
     name: "{{ item }}"
     state: present
   with_items: apache2_modules
-  notify: Restart apache
+  notify: "Restart apache"
 
 - name: Disable default apache site
   file:
     path: "/etc/apache2/sites-enabled/000-default"
     state: absent
-  notify: Restart apache
+  notify: "Restart apache"
 
 - name: Disable default-ssl apache site
   file:
     path: "/etc/apache2/sites-enabled/000-default-ssl"
     state: absent
-  notify: Restart apache
+  notify: "Restart apache"
 
 - name: Configure Apache ports
   template:
     src: apache2/ports.conf.j2
     dest: /etc/apache2/ports.conf
-  notify: Restart apache
+  notify: "Restart apache"
 
 - name: Tighten Apache security
   copy:
     src: apache2/security.conf
     dest: /etc/apache2/conf-available/security.conf
-  notify: Restart apache
+  notify: "Restart apache"
 
 - name: Create shared srv folder
   file:
