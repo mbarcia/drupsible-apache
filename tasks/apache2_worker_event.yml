@@ -6,7 +6,6 @@
   with_items: 
     - libapache2-mod-fastcgi 
   notify: "Restart apache"
-  tags: apache2
 
 - name: Install packages for Apache2 MPM worker/event
   package:
@@ -15,7 +14,6 @@
   with_items:
     - "apache2-mpm-{{ apache2_mpm }}"
   notify: "Restart apache"
-  tags: apache2
 
 - name: Enable Apache2 worker/event and its dependencies
   apache2_module: 
@@ -26,7 +24,6 @@
     - proxy_fcgi
     - alias
   notify: "Restart apache"
-  tags: apache2
 
 - name: Configure Apache event/worker MPM
   template:
@@ -34,7 +31,6 @@
     dest: /etc/apache2/mods-available/mpm_{{ apache2_mpm }}.conf
   when: apache2_mpm == "worker" or apache2_mpm == "event" 
   notify: "Restart apache"
-  tags: apache2
 
 - name: Disable Apache2 MPM prefork modules
   apache2_module: 
@@ -46,7 +42,6 @@
     - php5
   notify: "Restart apache"
   ignore_errors: true
-  tags: apache2
 
 - name: Disable Apache2 MPM event if worker requested
   apache2_module: 
@@ -54,7 +49,6 @@
     state: absent
   when: apache2_mpm == "worker" 
   notify: "Restart apache"
-  tags: apache2
 
 - name: Disable Apache2 MPM worker if event requested
   apache2_module: 
@@ -62,18 +56,15 @@
     state: absent
   when: apache2_mpm == "event" 
   notify: "Restart apache"
-  tags: apache2
 
 - name: Enable Apache2 worker/event MPM module
   apache2_module: 
     name: mpm_{{ apache2_mpm }}
     state: present
   notify: "Restart apache"
-  tags: apache2
 
 - name: Enable Apache2 stock mod_proxy_fcgi module
   apache2_module: 
     name: proxy_fcgi
     state: present
   notify: "Restart apache"
-  tags: apache2

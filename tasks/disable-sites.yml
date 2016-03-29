@@ -5,4 +5,3 @@
     state: absent
   with_items: "{{ apache2_disabled_vhost_sites }}"
   notify: "Restart apache"
-  tags: apache2
