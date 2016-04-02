@@ -76,7 +76,8 @@
 - name: Enable SSL
   apache2_module: 
     name: ssl
-    state: "{{ apache2_https_enabled|default(False)|bool|ternary('present', 'absent') }}"
+    state: present
+  when: apache2_https_enabled|default(False)|bool
   notify: "Restart apache"
 
 - name: Enable Apache2 additional modules
