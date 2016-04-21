@@ -51,10 +51,10 @@
 
 {% if apache2_uds_available %}
   <FilesMatch \.php$>
-    SetHandler "proxy:unix:{{ apache2_fpm_listen_uds }}|fcgi://{{ apache2_webhost }}{{ item }}.{{ webdomain }}"
+    SetHandler "proxy:unix:{{ apache2_fpm_listen_uds }}|fcgi://{{ apache2_webhost }}{{ item }}.{{ apache2_webdomain }}"
   </FilesMatch>
 
-  ProxyPassMatch ^({{ apache2_fpm_ping_path }}|{{ apache2_fpm_server_status_path }})$ unix:{{ apache2_fpm_listen_uds }}|fcgi://{{ apache2_webhost }}{{ item }}.{{ webdomain }}/
+  ProxyPassMatch ^({{ apache2_fpm_ping_path }}|{{ apache2_fpm_server_status_path }})$ unix:{{ apache2_fpm_listen_uds }}|fcgi://{{ apache2_webhost }}{{ item }}.{{ apache2_webdomain }}/
 {% else %}
   ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ apache2_fpm_listen }}{{ apache2_vhost_base_path }}/{{ apache2_site_name }}/public_html/$1
   ProxyPassMatch ^({{ apache2_fpm_ping_path }}|{{ apache2_fpm_server_status_path }})$ fcgi://{{ apache2_fpm_listen }}
