@@ -1,3 +1,10 @@
+{% if app_https_enabled|default(False)|bool and app_drupal_version|version_compare('8', '==') %}
+      # Redirect to HTTPS
+      RewriteCond %{HTTPS} off
+      RewriteCond %{HTTP:X-Forwarded-Proto} !https
+      RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+{% endif %}
+
       # If your site can be accessed both with and without the '{{ apache2_webhost }}.' prefix, you
       # can use one of the following settings to redirect users to your preferred
       # URL, either WITH or WITHOUT the '{{ apache2_webhost }}.' prefix. Choose ONLY one option:
@@ -25,7 +32,7 @@
       # uncomment the following line:
       # RewriteBase /
 
-{% if app_i18n_enabled|default(False)|bool and app_drupal_version == '7' %}
+{% if app_i18n_enabled|default(False)|bool and app_drupal_version|version_compare('7', '==') %}
   {% for language in app_languages|default([]) %}
       ## ONLY on frontpage, redirect to /{{ language }} if ANY of the browser languages 
       ## starts with '{{ language }}'
