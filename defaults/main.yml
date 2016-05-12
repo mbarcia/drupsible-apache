@@ -3,7 +3,7 @@
 apache2_mpm: "worker"
 
 apache2_packages_ontop:
-# prefork MPM only 
+# prefork MPM only
 #  - libapache2-mod-php5
 
 apache2_modules:
@@ -16,7 +16,7 @@ apache2_modules:
   - authz_host
   - authz_user
   - autoindex
-# cgi prefork MPM only 
+# cgi prefork MPM only
   - cgi
   - deflate
   - dir
@@ -24,7 +24,7 @@ apache2_modules:
   - expires
   - mime
   - negotiation
-# php5 prefork MPM only 
+# php5 prefork MPM only
 #  - php5
   - reqtimeout
   - rewrite
@@ -105,10 +105,14 @@ apache2_ferm_dependent_rules:
   multiport: True
 
 # This is one very useful setting, that has to be disabled by default.
-# Set it to "yes" and apache2 will redirect from the frontpage 
+# Set it to "yes" and apache2 will redirect from the frontpage
 # http://example.com/ to http://example.com/<language>
-# If ANY of the visitor browser's language starts with <language>. 
+# If ANY of the visitor browser's language starts with <language>.
 # The site's default language takes precedence over any other.
-# This setting only works when custom_rewrite_rules_path is not defined 
+# This setting only works when custom_rewrite_rules_path is not defined
 # and the default rewrite rules are used.
 apache2_redirect_front2lang: no
+
+# Enable this to log the real client's IP in case of being behind a reverse proxy
+apache2_varnish_enabled: False
+apache2_reverse_proxy_header: 'X-Forwarded-For'
