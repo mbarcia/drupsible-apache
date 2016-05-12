@@ -7,14 +7,14 @@
     group: "{{ app_group }}"
 
 - name: Copy optional rewrite rules file
-  template: 
+  template:
     src: "apache2/rewrite-rules.conf.j2"
     dest: "/etc/apache2/sites-available/{{ apache2_site_name }}-rewrite-rules.conf"
   notify: "Restart apache"
   when: custom_rewrite_rules_path is not defined
 
 - name: Copy custom optional rewrite rules file
-  template: 
+  template:
     src: "{{ custom_rewrite_rules_path }}"
     dest: "/etc/apache2/sites-available/{{ apache2_site_name }}-rewrite-rules.conf"
   notify: "Restart apache"
@@ -27,6 +27,7 @@
   with_items:
   - ""
   - ".bak"
+  notify: "Restart apache"
 
 - name: Create apache2 vhosts (http)
   template:
@@ -35,6 +36,7 @@
   with_items:
   - ""
   - ".bak"
+  notify: "Restart apache"
 
 - name: Create apache2 vhosts (https)
   template:
@@ -43,6 +45,7 @@
   with_items:
   - ""
   - ".bak"
+  notify: "Restart apache"
   when: apache2_https_enabled|bool
 
 - name: Enable apache2 cur, build and bak vhosts
