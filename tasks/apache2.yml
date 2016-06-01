@@ -1,6 +1,6 @@
 ---
 - name: Check MPM flavor
-  fail: 
+  fail:
     msg: "Please specify apache2_mpm as prefork, worker, or event."
   when: apache2_mpm != "prefork" and apache2_mpm != "worker" and apache2_mpm != "event"
 
@@ -8,7 +8,7 @@
   package:
     name: "{{ item }}"
     state: present
-  with_items: apache2_packages
+  with_items: "{{ apache2_packages }}"
   notify: "Restart apache"
 
 - name: Register Apache version
@@ -18,12 +18,12 @@
   become: yes
 
 - name: Initialize Unix Domain Sockets availability
-  set_fact: 
+  set_fact:
     apache2_uds_available: no
 
 - name: Apache implements Unix Domain Sockets (UDS) since 2.4.10+
   when: 'apache2_version is defined and apache2_version.stdout|match("Server version: Apache/2\\.4\\.1.")'
-  set_fact: 
+  set_fact:
     apache2_uds_available: yes
 
 - name: Make sure that Ansible local facts directory is present
@@ -56,13 +56,13 @@
   notify: "Restart apache"
 
 - name: Disable Apache2 MPM worker and event, if prefork is requested
-  apache2_module: 
+  apache2_module:
     name: "{{ item }}"
     state: absent
   with_items:
   - mpm_worker
   - mpm_event
-  when: apache2_mpm == "prefork" 
+  when: apache2_mpm == "prefork"
   ignore_errors: true
   notify: "Restart apache"
 
@@ -70,21 +70,21 @@
   template:
     src: apache2/mods/mpm_prefork.conf.j2
     dest: /etc/apache2/mods-available/mpm_prefork.conf
-  when: apache2_mpm == "prefork" 
+  when: apache2_mpm == "prefork"
   notify: "Restart apache"
 
 - name: Enable SSL
-  apache2_module: 
+  apache2_module:
     name: ssl
     state: present
   when: apache2_https_enabled|default(False)|bool
   notify: "Restart apache"
 
 - name: Enable Apache2 additional modules
-  apache2_module: 
+  apache2_module:
     name: "{{ item }}"
     state: present
-  with_items: apache2_modules
+  with_items: "{{ apache2_modules }}"
   notify: "Restart apache"
 
 - name: Disable default apache site
