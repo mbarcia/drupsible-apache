@@ -2,14 +2,16 @@
 - include: apache2.yml
 
 - include: mod-php.yml
-  when: apache2_mpm == 'prefork' 
+  when: apache2_mpm == 'prefork'
 
 - include: apache2_worker_event.yml
-  when: apache2_mpm == 'event' or apache2_mpm == 'worker' 
-  
+  when: apache2_mpm == 'event' or apache2_mpm == 'worker'
+
 - include: create-site.yml
 
 - include: disable-sites.yml
   when: apache2_disabled_vhost_sites is defined
 
 - include: logrotate.yml
+
+- meta: flush_handlers

@@ -3,9 +3,10 @@
   package:
     name: "{{ item }}"
     state: absent
-  with_items: 
-    - libapache2-mod-fastcgi 
+  with_items:
+    - libapache2-mod-fastcgi
   notify: "Restart apache"
+  when: ansible_distribution_release != 'xenial'
 
 - name: Install packages for Apache2 MPM worker/event
   package:
@@ -14,9 +15,10 @@
   with_items:
     - "apache2-mpm-{{ apache2_mpm }}"
   notify: "Restart apache"
+  when: ansible_distribution_release != 'xenial'
 
 - name: Enable Apache2 worker/event and its dependencies
-  apache2_module: 
+  apache2_module:
     name: "{{ item }}"
     state: present
   with_items:
@@ -29,14 +31,14 @@
   template:
     src: apache2/mods/mpm_{{ apache2_mpm }}.conf.j2
     dest: /etc/apache2/mods-available/mpm_{{ apache2_mpm }}.conf
-  when: apache2_mpm == "worker" or apache2_mpm == "event" 
+  when: apache2_mpm == "worker" or apache2_mpm == "event"
   notify: "Restart apache"
 
 - name: Disable Apache2 MPM prefork modules
-  apache2_module: 
+  apache2_module:
     name: "{{ item }}"
     state: absent
-  with_items: 
+  with_items:
     - mpm_itk
     - mpm_prefork
     - php5
@@ -44,27 +46,27 @@
   ignore_errors: true
 
 - name: Disable Apache2 MPM event if worker requested
-  apache2_module: 
+  apache2_module:
     name: mpm_event
     state: absent
-  when: apache2_mpm == "worker" 
+  when: apache2_mpm == "worker"
   notify: "Restart apache"
 
 - name: Disable Apache2 MPM worker if event requested
-  apache2_module: 
+  apache2_module:
     name: mpm_worker
     state: absent
-  when: apache2_mpm == "event" 
+  when: apache2_mpm == "event"
   notify: "Restart apache"
 
 - name: Enable Apache2 worker/event MPM module
-  apache2_module: 
+  apache2_module:
     name: mpm_{{ apache2_mpm }}
     state: present
   notify: "Restart apache"
 
 - name: Enable Apache2 stock mod_proxy_fcgi module
-  apache2_module: 
+  apache2_module:
     name: proxy_fcgi
     state: present
   notify: "Restart apache"
