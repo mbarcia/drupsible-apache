@@ -45,11 +45,12 @@
   # header to PHP: required for "basic_auth" under PHP-FPM and FastCGI
   SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
 
-  # Ping/status to probe PHP-FPM (status allowed only from load balancers, local and trusted IPs)
+  # Ping/status to probe PHP-FPM (status allowed only from load balancers and/or trusted IPs)
   <LocationMatch "{{ apache2_fpm_server_status_path }}$">
-    Require ip 127.0.0.1
-    Require ip 10.0.0.0/8
-{% for ip in apache2_allowed_hosts %}
+{% for ip in apache2_ping_group_ip_addr_list|default([]) %}
+    Require ip {{ ip }}
+{% endfor %}
+{% for ip in apache2_ping_allowed_hosts|default([]) %}
     Require ip {{ ip }}
 {% endfor %}
   </LocationMatch>
