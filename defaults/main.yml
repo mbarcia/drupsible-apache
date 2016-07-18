@@ -30,6 +30,7 @@ apache2_modules:
   - rewrite
   - setenvif
   - status
+  - headers
 
 apache2_mod_php5_packages_ontop:
   - php-pear
@@ -56,7 +57,7 @@ apache2_host_allow: []
 apache2_ping_group: ''
 
 # List of IP addresses or CIDR networks allowed to ping the PHP-FPM status
-# service page (other than apache2_ping_group servers). 
+# service page (other than apache2_ping_group servers).
 apache2_ping_allowed_hosts: []
 
 # php.ini settings, only for prefork MPM (apache's mod_php module)

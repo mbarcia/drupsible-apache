@@ -45,6 +45,11 @@
   # header to PHP: required for "basic_auth" under PHP-FPM and FastCGI
   SetEnvIfNoCase ^Authorization$ "(.+)" HTTP_AUTHORIZATION=$1
 
+  # https://www.apache.org/security/asf-httpoxy-response.txt
+  <IfModule mod_headers.c>
+    RequestHeader unset Proxy early
+  </IfModule>
+
   # Ping/status to probe PHP-FPM (status allowed only from load balancers and/or trusted IPs)
   <LocationMatch "{{ apache2_fpm_server_status_path }}$">
 {% for ip in apache2_ping_group_ip_addr_list|default([]) %}
