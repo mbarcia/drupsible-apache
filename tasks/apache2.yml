@@ -10,6 +10,7 @@
     state: present
   with_items: "{{ apache2_packages }}"
   notify: "Restart apache"
+  tags: [ provision ]
 
 - name: Register Apache version
   command: "apache2 -v"
@@ -54,6 +55,7 @@
   when: item != ''
   with_items: "{{ apache2_packages_ontop|default([]) }}"
   notify: "Restart apache"
+  tags: [ provision ]
 
 - name: Disable Apache2 MPM worker and event, if prefork is requested
   apache2_module:
