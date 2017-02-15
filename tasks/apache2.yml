@@ -17,15 +17,18 @@
   register: apache2_version
   changed_when: False
   become: yes
+  tags: [ provision ]
 
 - name: Initialize Unix Domain Sockets availability
   set_fact:
     apache2_uds_available: no
+  tags: [ provision ]
 
 - name: Apache implements Unix Domain Sockets (UDS) since 2.4.10+
   when: 'apache2_version is defined and apache2_version.stdout|match("Server version: Apache/2\\.4\\.1.")'
   set_fact:
     apache2_uds_available: yes
+  tags: [ provision ]
 
 - name: Make sure that Ansible local facts directory is present
   file:
@@ -34,6 +37,7 @@
     owner: 'root'
     group: 'root'
     mode: '0755'
+  tags: [ provision ]
 
 - name: Save apache2 local facts
   template:
@@ -43,10 +47,12 @@
     group: 'root'
     mode: '0644'
   register: apache2_register_local_facts
+  tags: [ provision ]
 
 - name: Gather facts if they were modified
   action: setup
   when: apache2_register_local_facts.changed
+  tags: [ provision ]
 
 - name: Install Apache2 additional pkgs
   package:
