@@ -53,6 +53,10 @@ apache2_allow: []
 apache2_group_allow: []
 apache2_host_allow: []
 
+# Switch to yes if in a cloud environment where the IPs of the web servers
+# are dynamic (not static/fixed at provision/config time)
+apache2_in_cloud: no
+
 # Inventory group whose servers can ping PHP-FPM status service page
 apache2_ping_group: ''
 

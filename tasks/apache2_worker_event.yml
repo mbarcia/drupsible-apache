@@ -7,6 +7,7 @@
     - libapache2-mod-fastcgi
   notify: "Restart apache"
   when: ansible_distribution_release != 'xenial'
+  tags: [ provision ]
 
 - name: Install packages for Apache2 MPM worker/event
   package:
@@ -16,6 +17,7 @@
     - "apache2-mpm-{{ apache2_mpm }}"
   notify: "Restart apache"
   when: ansible_distribution_release != 'xenial'
+  tags: [ provision ]
 
 - name: Enable Apache2 worker/event and its dependencies
   apache2_module:
