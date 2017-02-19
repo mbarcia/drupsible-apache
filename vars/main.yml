@@ -13,8 +13,8 @@ apache2_mod_php5_packages:
 # Varnish server.
 apache2_ping_group_ip_addr: |
   {% set comma = joiner(",") %}
-  {% for host in groups[apache2_ping_group] %}
-  {% for ip_addr in hostvars[host].ansible_all_ipv4_addresses -%}
+  {% for host in groups[apache2_ping_group]|default([]) %}
+  {% for ip_addr in hostvars[host].ansible_all_ipv4_addresses|default([]) -%}
   {{ comma() }}{{ ip_addr }}
   {%- endfor %}
   {% endfor %}
