@@ -52,9 +52,11 @@
 
   # Ping/status to probe PHP-FPM (status allowed only from load balancers and/or trusted IPs)
   <LocationMatch "{{ apache2_fpm_server_status_path }}$">
-{% for ip in apache2_ping_group_ip_addr_list|default([]) %}
+{% if not apache2_in_cloud|default(False)|bool %}
+{%   for ip in apache2_ping_group_ip_addr_list|default([]) %}
     Require ip {{ ip }}
-{% endfor %}
+{%   endfor %}
+{% endif %}
 {% for ip in apache2_ping_allowed_hosts|default([]) %}
     Require ip {{ ip }}
 {% endfor %}
@@ -249,4 +251,4 @@
   </Directory>
 {% endif %}
 
-  ServerAdmin {{ app_admin_email|default('admin@' + '.' + ansible_fqdn) }}
+  ServerAdmin {{ app_admin_email|default('admin@' + '.' + ansible_fqdn|default(app_webdomain)) }}
