@@ -130,3 +130,7 @@ apache2_redirect_front2lang: no
 # Enable this to log the real client's IP in case of being behind a reverse proxy
 apache2_varnish_enabled: False
 apache2_reverse_proxy_header: 'X-Forwarded-For'
+
+# Set to yes is bigpipe module is going to be enabled in Drupal 8.
+# It will disable compression for dynamic pages.
+apache2_bigpipe_enabled: no
