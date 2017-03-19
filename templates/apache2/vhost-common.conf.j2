@@ -168,7 +168,7 @@
       RewriteCond %{REQUEST_FILENAME} !-d
       RewriteCond %{REQUEST_URI} !=/favicon.ico
 {% if apache2_bigpipe_enabled|default(False)|bool %}
-      RewriteRule ^ index.php - [E=no-gzip:1,L]
+      RewriteRule ^ index.php [E=no-gzip:1,L]
       SetEnvIf REDIRECT_no-gzip 1 no-gzip
 {% else %}
       RewriteRule ^ index.php [L]
