@@ -167,7 +167,13 @@
       RewriteCond %{REQUEST_FILENAME} !-f
       RewriteCond %{REQUEST_FILENAME} !-d
       RewriteCond %{REQUEST_URI} !=/favicon.ico
+{% if apache2_bigpipe_enabled|default(False)|bool %}
+      RewriteRule ^ index.php - [E=no-gzip:1]
+{% endif %}
       RewriteRule ^ index.php [L]
+{% if apache2_bigpipe_enabled|default(False)|bool %}
+      SetEnvIf REDIRECT_no-gzip 1 no-gzip
+{% endif %}
 
       # Rules to correctly serve gzip compressed CSS and JS files.
       # Requires both mod_rewrite and mod_headers to be enabled.
