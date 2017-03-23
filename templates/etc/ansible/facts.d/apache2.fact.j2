@@ -2,4 +2,8 @@
 "uds_available": "{{ apache2_uds_available|default(True) }}",
 "www": "{{ apache2_vhost_base_path|default('/var/www') }}",
 "mpm": "{{ apache2_mpm }}"
+{% if apache2_pki_cert and apache2_pki_key %}
+, "cert": "{{ apache2_pki_cert }}"
+, "key": "{{ apache2_pki_key }}"
+{% endif %}
 }
