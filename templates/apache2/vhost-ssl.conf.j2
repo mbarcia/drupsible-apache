@@ -9,7 +9,7 @@
 {% if apache2_pki_cert is defined and apache2_pki_key is defined %}
   <IfModule mod_ssl.c>
   SSLEngine on
-  SSLCertificateFile {{ apache2_pki_crt }}
+  SSLCertificateFile {{ apache2_pki_cert }}
   SSLCertificateKeyFile {{ apache2_pki_key }}
 {% if apache2_ssl_params is defined and apache2_ssl_params %}
 {% for key, value in apache2_ssl_params.iteritems() %}
@@ -22,7 +22,7 @@
   <IfModule gnutls.c>
     GnuTLSEnable on
     GnuTLSPriorities NORMAL:!DHE-RSA:!DHE-DSS:!AES-256-CBC
-    GnuTLSCertificateFile "{{ apache2_pki_crt }}"
+    GnuTLSCertificateFile "{{ apache2_pki_cert }}"
     GnuTLSKeyFile         "{{ apache2_pki_key }}"
   </IfModule>
 
