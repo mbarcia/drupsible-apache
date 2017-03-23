@@ -81,6 +81,22 @@
   when: apache2_mpm == "prefork"
   notify: "Restart apache"
 
+- name: Create self signed SSL certificates
+  command: "openssl req -x509 -nodes -sha256 -days 99999 -newkey rsa:2048 -keyout {{ apache2_pki_key }} -out {{ apache2_pki_cert }} -subj '/C=US/ST=NC/L=London/O={{ apache2_site_name }}/CN={{ apache2_webdomain }}'"
+  args:
+    creates: "{{ apache2_pki_cert }}"
+  when: apache2_https_enabled|default(False)|bool
+  notify: "Restart apache"
+
+- name: Configure file permissions on certificate file
+  file:
+    path: "{{ apache2_pki_cert }}"
+    owner: '{{ app_user }}'
+    group: '{{ app_group }}'
+    mode: 0600
+  when: apache2_https_enabled|default(False)|bool
+  notify: "Restart apache"
+    
 - name: Enable SSL
   apache2_module:
     name: ssl
