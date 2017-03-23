@@ -6,7 +6,7 @@
   ServerAlias                           {{ alias }}
 {% endfor %}
 
-{% if apache2_pki_crt is defined and apache2_pki_key is defined %}
+{% if apache2_pki_cert is defined and apache2_pki_key is defined %}
   <IfModule mod_ssl.c>
   SSLEngine on
   SSLCertificateFile {{ apache2_pki_crt }}
