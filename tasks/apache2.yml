@@ -8,6 +8,7 @@
   package:
     name: "{{ item }}"
     state: present
+    use: apt
   with_items: "{{ apache2_packages }}"
   notify: "Restart apache"
   tags: [ provision ]
@@ -58,6 +59,7 @@
   package:
     name: "{{ item }}"
     state: present
+    use: apt
   when: item != ''
   with_items: "{{ apache2_packages_ontop|default([]) }}"
   notify: "Restart apache"

@@ -3,6 +3,7 @@
   package:
     name: "{{ item }}"
     state: present
+    use: apt
   with_items: "{{ apache2_mod_php5_packages }}"
   notify: "Restart apache"
 
@@ -10,6 +11,7 @@
   package:
     name: "{{ item }}"
     state: present
+    use: apt
   with_items: "{{ apache2_mod_php5_packages_ontop }}"
   notify: "Restart apache"
 

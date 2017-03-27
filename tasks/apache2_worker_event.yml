@@ -3,6 +3,7 @@
   package:
     name: "{{ item }}"
     state: absent
+    use: apt
   with_items:
     - libapache2-mod-fastcgi
   notify: "Restart apache"
@@ -13,6 +14,7 @@
   package:
     name: "{{ item }}"
     state: present
+    use: apt
   with_items:
     - "apache2-mpm-{{ apache2_mpm }}"
   notify: "Restart apache"
