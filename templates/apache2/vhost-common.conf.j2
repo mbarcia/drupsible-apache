@@ -257,4 +257,4 @@
   </Directory>
 {% endif %}
 
-  ServerAdmin {{ app_admin_email|default('admin@' + '.' + ansible_fqdn) }}
+  ServerAdmin {{ app_admin_email|default('admin@' + '.' + ansible_fqdn|default(apache2_webdomain)) }}

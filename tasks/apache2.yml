@@ -8,15 +8,15 @@
   package:
     name: "{{ item }}"
     state: present
+    use: apt
   with_items: "{{ apache2_packages }}"
   notify: "Restart apache"
   tags: [ provision ]
 
 - name: Register Apache version
-  command: "apache2 -v"
+  shell: apache2 -v | grep version | sed -e 's|^.*Apache/\([0-9\.]*\).*$|\1|g'
   register: apache2_version
   changed_when: False
-  become: yes
   tags: [ provision ]
 
 - name: Initialize Unix Domain Sockets availability
@@ -25,7 +25,7 @@
   tags: [ provision ]
 
 - name: Apache implements Unix Domain Sockets (UDS) since 2.4.10+
-  when: 'apache2_version is defined and apache2_version.stdout|match("Server version: Apache/2\\.4\\.1.")'
+  when: apache2_version.stdout|version_compare('2.4.10', '>=')
   set_fact:
     apache2_uds_available: yes
   tags: [ provision ]
@@ -58,6 +58,7 @@
   package:
     name: "{{ item }}"
     state: present
+    use: apt
   when: item != ''
   with_items: "{{ apache2_packages_ontop|default([]) }}"
   notify: "Restart apache"

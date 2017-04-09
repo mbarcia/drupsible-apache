@@ -4,6 +4,7 @@
   delegate_to: "{{ item }}"
   delegate_facts: True
   with_items: "{{ groups[apache2_ping_group] }}"
+  when: not apache2_in_container|d(False)|bool
 
 - include: apache2.yml
 
@@ -21,3 +22,26 @@
 - include: logrotate.yml
 
 - meta: flush_handlers
+  when: not apache2_in_container|d(False)|bool
+
+- name: Test if using a phusion image
+  stat:
+    path: "/sbin/my_init"
+  register: apache2_my_init_output
+  when: apache2_in_container|d(False)|bool
+  tags: [ provision ]
+
+- name: Make sure /etc/service/apache2 exists
+  file:
+    path: /etc/service/apache2
+    state: directory
+  when: apache2_in_container|d(False)|bool and apache2_my_init_output.stat.exists
+  tags: [ provision ]
+
+- name: Install apache2 at boot
+  copy:
+    src: apache2-init.sh
+    dest: /etc/service/apache2/run
+    mode: "a+x"
+  when: apache2_in_container|d(False)|bool and apache2_my_init_output.stat.exists
+  tags: [ provision ]
