@@ -38,6 +38,12 @@
   when: apache2_mpm == "worker" or apache2_mpm == "event"
   notify: "Restart apache"
 
+- name: Enable Apache2 worker/event MPM module
+  apache2_module:
+    name: mpm_{{ apache2_mpm }}
+    state: present
+  notify: "Restart apache"
+
 - name: Disable Apache2 MPM prefork modules
   apache2_module:
     name: "{{ item }}"
@@ -61,12 +67,6 @@
     name: mpm_worker
     state: absent
   when: apache2_mpm == "event"
-  notify: "Restart apache"
-
-- name: Enable Apache2 worker/event MPM module
-  apache2_module:
-    name: mpm_{{ apache2_mpm }}
-    state: present
   notify: "Restart apache"
 
 - name: Enable Apache2 stock mod_proxy_fcgi module
