@@ -28,7 +28,7 @@
     - proxy_fcgi
     - alias
   register: apache2_module_output
-  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
+  changed_when: apache2_module_output.stdout.find('{{ item }} already') == -1
   notify: "Restart apache"
 
 - name: Configure Apache event/worker MPM
@@ -45,7 +45,7 @@
     - mpm_prefork
     - php5
   register: apache2_module_output
-  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
+  changed_when: apache2_module_output.stdout.find('{{ item }} already') == -1
   notify: "Restart apache"
   ignore_errors: true
 
@@ -53,24 +53,24 @@
   command: "a2dismod mpm_event"
   when: apache2_mpm == "worker"
   register: apache2_module_output
-  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
+  changed_when: apache2_module_output.stdout.find('mpm_event already') == -1
   notify: "Restart apache"
 
 - name: Disable Apache2 MPM worker if event requested
   command: "a2dismod mpm_worker"
   when: apache2_mpm == "event"
   register: apache2_module_output
-  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
+  changed_when: apache2_module_output.stdout.find('mpm_worker already') == -1
   notify: "Restart apache"
 
 - name: Enable Apache2 worker/event MPM module
   command: "a2enmod mpm_{{ apache2_mpm }}"
   register: apache2_module_output
-  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
+  changed_when: apache2_module_output.stdout.find('mpm_{{ apache2_mpm }} already') == -1
   notify: "Restart apache"
 
 - name: Enable Apache2 stock mod_proxy_fcgi module
   command: a2enmod proxy_fcgi 
   register: apache2_module_output
-  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
+  changed_when: apache2_module_output.stdout.find('proxy_fcgi already') == -1
   notify: "Restart apache"
