@@ -22,13 +22,13 @@
   tags: [ provision ]
 
 - name: Enable Apache2 worker/event and its dependencies
-  apache2_module:
-    name: "{{ item }}"
-    state: present
+  command: "a2enmod {{ item }}" 
   with_items:
     - actions
     - proxy_fcgi
     - alias
+  register: apache2_module_output
+  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
   notify: "Restart apache"
 
 - name: Configure Apache event/worker MPM
@@ -38,39 +38,39 @@
   when: apache2_mpm == "worker" or apache2_mpm == "event"
   notify: "Restart apache"
 
-- name: Enable Apache2 worker/event MPM module
-  apache2_module:
-    name: mpm_{{ apache2_mpm }}
-    state: present
-  notify: "Restart apache"
-
 - name: Disable Apache2 MPM prefork modules
-  apache2_module:
-    name: "{{ item }}"
-    state: absent
+  command: "a2dismod {{ item }}"
   with_items:
     - mpm_itk
     - mpm_prefork
     - php5
+  register: apache2_module_output
+  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
   notify: "Restart apache"
   ignore_errors: true
 
 - name: Disable Apache2 MPM event if worker requested
-  apache2_module:
-    name: mpm_event
-    state: absent
+  command: "a2dismod mpm_event"
   when: apache2_mpm == "worker"
+  register: apache2_module_output
+  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
   notify: "Restart apache"
 
 - name: Disable Apache2 MPM worker if event requested
-  apache2_module:
-    name: mpm_worker
-    state: absent
+  command: "a2dismod mpm_worker"
   when: apache2_mpm == "event"
+  register: apache2_module_output
+  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
+  notify: "Restart apache"
+
+- name: Enable Apache2 worker/event MPM module
+  command: "a2enmod mpm_{{ apache2_mpm }}"
+  register: apache2_module_output
+  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
   notify: "Restart apache"
 
 - name: Enable Apache2 stock mod_proxy_fcgi module
-  apache2_module:
-    name: proxy_fcgi
-    state: present
+  command: a2enmod proxy_fcgi 
+  register: apache2_module_output
+  changed_when: apache2_module_output.stdout.find('{{ item.name }} already') == -1
   notify: "Restart apache"
