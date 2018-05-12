@@ -1,0 +1,21 @@
+{#
+# For further customization, you can copy this file to the folder 
+# ansible/playbooks/templates/apache2/, with a _different_ filename,
+# ie. 'custom-proxy-rules.conf.j2'. Then just and add a variable to your group_vars, 
+# like this:
+#
+# custom_proxy_rules_path: apache2/custom-proxy-rules.conf.j2
+#
+# Then proceed to write any custom Proxy rules here, ie. for s3fs module
+#
+#  ProxyRequests Off
+#  SSLProxyEngine on
+#  <Proxy *>
+#      Order deny,allow
+#      Allow from all
+#  </Proxy>
+#  ProxyPass /s3fs-css/ https://YOUR-BUCKET.s3.amazonaws.com/YOUR-ROOT-FOLDER/s3fs-public/
+#  ProxyPassReverse /s3fs-css/ https://YOUR-BUCKET.s3.amazonaws.com/YOUR-ROOT-FOLDER/s3fs-public/
+#  ProxyPass /s3fs-js/ https://YOUR-BUCKET.s3.amazonaws.com/YOUR-ROOT-FOLDER/s3fs-public/
+#  ProxyPassReverse /s3fs-js/ https://YOUR-BUCKET.s3.amazonaws.com/YOUR-ROOT-FOLDER/s3fs-public/
+#}
