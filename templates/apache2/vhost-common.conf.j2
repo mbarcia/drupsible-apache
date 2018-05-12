@@ -1,3 +1,13 @@
+{#
+# To further customize your config, you can copy this file 
+# to the folder ansible/playbooks/templates/apache2/, with a _different_ filename,
+# ie. 'custom-vhost-common.conf.j2'. Then just and add a variable to your group_vars, 
+# like this:
+#
+# custom_vhost_common_path: apache2/custom-vhost-common.conf.j2
+#
+# Then you can use this working (default) code as a starting point.
+#}
 # {{ ansible_managed }}
 
   DocumentRoot                 {{ apache2_vhost_base_path }}/{{ apache2_site_name }}/public_html{{ item }}
@@ -61,6 +71,8 @@
     Require ip {{ ip }}
 {% endfor %}
   </LocationMatch>
+
+  Include sites-available/{{ apache2_site_name }}-proxy-rules.conf
 
 {% if apache2_uds_available %}
   <FilesMatch \.php$>

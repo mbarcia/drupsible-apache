@@ -6,27 +6,25 @@
     owner: "{{ app_user }}"
     group: "{{ app_group }}"
 
-- name: Copy optional rewrite rules file
+- name: Template apache2 vhost-common
   template:
-    src: "apache2/rewrite-rules.conf.j2"
-    dest: "/etc/apache2/sites-available/{{ apache2_site_name }}-rewrite-rules.conf"
-  notify: "Restart apache"
-  when: custom_rewrite_rules_path is not defined
-
-- name: Copy custom optional rewrite rules file
-  template:
-    src: "{{ custom_rewrite_rules_path }}"
-    dest: "/etc/apache2/sites-available/{{ apache2_site_name }}-rewrite-rules.conf"
-  notify: "Restart apache"
-  when: custom_rewrite_rules_path is defined
-
-- name: Copy apache2 vhost-common
-  template:
-    src: apache2/vhost-common.conf.j2
+    src: "{{ apache2_custom_vhost_common_path | d('apache2/vhost-common.conf.j2') }}"
     dest: "/etc/apache2/{{ apache2_site_name }}-common{{ item }}.conf"
   with_items:
   - ""
   - ".bak"
+  notify: "Restart apache"
+
+- name: Template rewrite rules file
+  template:
+    src: "{{ apache2_custom_rewrite_rules_path | d('apache2/rewrite-rules.conf.j2') }}"
+    dest: "/etc/apache2/sites-available/{{ apache2_site_name }}-rewrite-rules.conf"
+  notify: "Restart apache"
+
+- name: Template proxy rules file
+  template:
+    src: "{{ apache2_custom_proxy_rules_path | d('apache2/proxy-rules.conf.j2') }}"
+    dest: "/etc/apache2/sites-available/{{ apache2_site_name }}-proxy-rules.conf"
   notify: "Restart apache"
 
 - name: Create apache2 vhosts (http)

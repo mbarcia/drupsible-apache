@@ -134,3 +134,9 @@ apache2_reverse_proxy_header: 'X-Forwarded-For'
 # Set to yes is bigpipe module is going to be enabled in Drupal 8.
 # It will disable compression for dynamic pages.
 apache2_bigpipe_enabled: no
+
+# You can override these default template filenames with your own template paths
+# Follow the comments on each of the templates provided
+apache2_custom_vhost_common_path: apache2/vhost-common.conf.j2
+apache2_custom_rewrite_rules_path: apache2/rewrite-rules.conf.j2
+apache2_custom_proxy_rules_path: apache2/proxy-rules.conf.j2
