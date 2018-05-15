@@ -8,6 +8,8 @@
 #
 # Then you can use this working (default) code as a starting point.
 #}
+# {{ ansible_managed }}
+
 {% if app_https_enabled|default(False)|bool and app_drupal_version|version_compare('8', '==') %}
       # Redirect to HTTPS
       RewriteCond %{HTTPS} off
