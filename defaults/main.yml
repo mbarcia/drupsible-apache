@@ -140,3 +140,5 @@ apache2_bigpipe_enabled: no
 apache2_custom_vhost_common_path: apache2/vhost-common.conf.j2
 apache2_custom_rewrite_rules_path: apache2/rewrite-rules.conf.j2
 apache2_custom_proxy_rules_path: apache2/proxy-rules.conf.j2
+
+app_public_html_folder: public_html

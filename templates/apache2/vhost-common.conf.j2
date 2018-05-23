@@ -10,7 +10,7 @@
 #}
 # {{ ansible_managed }}
 
-  DocumentRoot                 {{ apache2_vhost_base_path }}/{{ apache2_site_name }}/public_html{{ item }}
+  DocumentRoot                 {{ apache2_vhost_base_path }}/{{ apache2_site_name }}/{{ apache2_public_html_folder }}{{ item }}
   ErrorLog                     {{ apache2_vhost_base_path }}/{{ apache2_site_name }}/logs/error.log
 {% if apache2_varnish_enabled|default(False)|bool %}
 {% raw %}  LogFormat "%{{% endraw %}{{ apache2_reverse_proxy_header|default('X-Forwarded-For') }}}i %t \"%r\" %>s %b \"%{Referer}i\" \"%{User-Agent}i\"" varnish
@@ -81,7 +81,7 @@
 
   ProxyPassMatch ^({{ apache2_fpm_ping_path }}|{{ apache2_fpm_server_status_path }})$ unix:{{ apache2_fpm_listen_uds }}|fcgi://{{ apache2_webhost }}{{ item }}.{{ apache2_webdomain }}/
 {% else %}
-  ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ apache2_fpm_listen }}{{ apache2_vhost_base_path }}/{{ apache2_site_name }}/public_html/$1
+  ProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://{{ apache2_fpm_listen }}{{ apache2_vhost_base_path }}/{{ apache2_site_name }}/{{ apache2_public_html_folder }}/$1
   ProxyPassMatch ^({{ apache2_fpm_ping_path }}|{{ apache2_fpm_server_status_path }})$ fcgi://{{ apache2_fpm_listen }}
 {% endif %}
 {% endif %}
@@ -96,7 +96,7 @@
     AllowOverride {{ apache2_allow_override_htaccess|default('None') }}
   </Directory>
 
-  <Directory {{ apache2_vhost_base_path }}/{{ apache2_site_name }}/public_html{{ item }}>
+  <Directory {{ apache2_vhost_base_path }}/{{ apache2_site_name }}/{{ apache2_public_html_folder }}{{ item }}>
 {% if apache2_allow_override_htaccess == 'None' %}
     Require all granted
 
@@ -232,7 +232,7 @@
   </IfModule>
 
 {% if apache2_allow_override_htaccess == 'None' %}
-  <Directory {{ apache2_vhost_base_path }}/{{ apache2_site_name }}/public_html{{ item }}/sites/default/files>
+  <Directory {{ apache2_vhost_base_path }}/{{ apache2_site_name }}/{{ apache2_public_html_folder }}{{ item }}/sites/default/files>
     # Turn off all options we don't need.
     Options None
     Options +FollowSymLinks
@@ -258,7 +258,7 @@
 {% endif %}
 
 {% if apache2_allow_override_htaccess == 'None' %}
-  <Directory {{ apache2_vhost_base_path }}/{{ apache2_site_name }}/public_html{{ item }}/sites/default/files/private>
+  <Directory {{ apache2_vhost_base_path }}/{{ apache2_site_name }}/{{ apache2_public_html_folder }}{{ item }}/sites/default/files/private>
     Require all denied
 
     <IfModule mod_expires.c>
