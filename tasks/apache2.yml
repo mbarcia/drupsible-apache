@@ -22,7 +22,7 @@
 - name: Initialize Unix Domain Sockets availability
   set_fact:
     apache2_uds_available: no
-  tags: [ provision ]
+  tags: [ always ]
 
 - name: Apache implements Unix Domain Sockets (UDS) since 2.4.10+
   when: apache2_version.stdout|version_compare('2.4.10', '>=')
