@@ -13,11 +13,20 @@
   notify: "Restart apache"
   tags: [ provision ]
 
+- name: Install Apache2 additional pkgs
+  package:
+    name: "{{ item }}"
+    state: present
+    use: apt
+  when: item != ''
+  with_items: "{{ apache2_packages_ontop|default([]) }}"
+  notify: "Restart apache"
+  tags: [ provision ]
+
 - name: Register Apache version
   shell: apache2 -v | grep version | sed -e 's|^.*Apache/\([0-9\.]*\).*$|\1|g'
   register: apache2_version
   changed_when: False
-  tags: [ provision ]
 
 - name: Initialize Unix Domain Sockets availability
   set_fact:
@@ -28,7 +37,6 @@
   when: apache2_version.stdout|version_compare('2.4.10', '>=')
   set_fact:
     apache2_uds_available: yes
-  tags: [ provision ]
 
 - name: Make sure that Ansible local facts directory is present
   file:
@@ -37,7 +45,6 @@
     owner: 'root'
     group: 'root'
     mode: '0755'
-  tags: [ provision ]
 
 - name: Save apache2 local facts
   template:
@@ -47,22 +54,10 @@
     group: 'root'
     mode: '0644'
   register: apache2_register_local_facts
-  tags: [ provision ]
 
 - name: Gather facts if they were modified
   action: setup
   when: apache2_register_local_facts.changed
-  tags: [ provision ]
-
-- name: Install Apache2 additional pkgs
-  package:
-    name: "{{ item }}"
-    state: present
-    use: apt
-  when: item != ''
-  with_items: "{{ apache2_packages_ontop|default([]) }}"
-  notify: "Restart apache"
-  tags: [ provision ]
 
 - name: Disable Apache2 MPM worker and event, if prefork is requested
   apache2_module:
