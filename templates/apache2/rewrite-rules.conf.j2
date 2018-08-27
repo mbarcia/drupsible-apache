@@ -26,6 +26,8 @@
       # uncomment the following:
       RewriteCond %{HTTP_HOST} .
       RewriteCond %{HTTP_HOST} !^{{ apache2_webhost }}\. [NC]
+      RewriteCond %{HTTP_HOST} !^varnish [NC]
+      RewriteCond %{HTTP_HOST} !^localhost [NC]
       RewriteRule ^ http%{ENV:protossl}://{{ apache2_webhost }}.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
       #
       # To redirect all users to access the site WITHOUT the 'www.' prefix,
