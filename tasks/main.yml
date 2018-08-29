@@ -31,6 +31,13 @@
   when: apache2_in_container|d(False)|bool
   tags: [ provision ]
 
+- name: Make sure /var/lock/apache2 exists
+  file:
+    path: /var/lock/apache2
+    state: directory
+  when: apache2_in_container|d(False)|bool
+  tags: [ provision ]
+
 - name: Make sure /etc/service/apache2 exists
   file:
     path: /etc/service/apache2
