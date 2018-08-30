@@ -21,9 +21,6 @@
 
 - include: logrotate.yml
 
-- meta: flush_handlers
-  when: not apache2_in_container|d(False)|bool
-
 - name: Test if using a phusion image
   stat:
     path: "/sbin/my_init"
@@ -31,11 +28,12 @@
   when: apache2_in_container|d(False)|bool
   tags: [ provision ]
 
+- meta: flush_handlers
+
 - name: Make sure /var/lock/apache2 exists
   file:
     path: /var/lock/apache2
     state: directory
-  when: apache2_in_container|d(False)|bool
   tags: [ provision ]
 
 - name: Make sure /etc/service/apache2 exists
