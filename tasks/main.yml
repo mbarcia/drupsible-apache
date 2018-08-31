@@ -36,6 +36,12 @@
     state: directory
   tags: [ provision ]
 
+- name: Make sure /var/run/apache2 exists
+  file:
+    path: /var/run/apache2
+    state: directory
+  tags: [ provision ]
+
 - name: Make sure /etc/service/apache2 exists
   file:
     path: /etc/service/apache2
