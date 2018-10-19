@@ -1,0 +1,32 @@
+---
+- name: Test if using a phusion image
+  stat:
+    path: "/sbin/my_init"
+  register: apache2_my_init_output
+
+- name: Make sure /var/lock/apache2 exists
+  file:
+    path: /var/lock/apache2
+    state: directory
+
+- name: Make sure /var/run/apache2 exists
+  file:
+    path: /var/run/apache2
+    state: directory
+
+- name: Make sure /etc/service/apache2 exists
+  file:
+    path: /etc/service/apache2
+    state: directory
+  when: apache2_my_init_output.stat.exists
+
+- name: Install apache2 at boot
+  copy:
+    src: apache2-init.sh
+    dest: /etc/service/apache2/run
+    mode: "a+x"
+  when: apache2_my_init_output.stat.exists
+
+- name: Stop the service
+  command: service apache2 stop
+  when: apache2_my_init_output.stat.exists
